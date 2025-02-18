@@ -9,7 +9,7 @@ import java.util.List;
 @Service
 public class TaskService {
 
-    private final List<Task> tasks = new ArrayList<>(); // Simulación de base de datos
+    private List<Task> tasks = new ArrayList<>(); // Simulación de base de datos
 
     public List<Task> getAllTasks() {
         return tasks;

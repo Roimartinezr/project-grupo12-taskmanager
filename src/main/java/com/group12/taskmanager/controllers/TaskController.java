@@ -22,8 +22,9 @@ public class TaskController {
     // 📌 1. Mostrar lista de tareas en index.html
     @GetMapping("/")
     public String getTasks(Model model) {
-        List<Task> tasks = taskService.getAllTasks(); // Obtener todas las tareas
+        List<Task> tasks = taskService.getAllTasks();
         model.addAttribute("tasks", tasks); // Pasar lista a la vista
+
         return "index"; // Renderiza index.html
     }
 
