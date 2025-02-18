@@ -3,19 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../static/css/index.css">
-    <title>Lista de Tareas</title>
+    <link rel="stylesheet" href="/css/index.css">
+    <title>Home</title>
 </head>
 <body>
-    <h1>Lista de Tareas</h1>
-
+    <h1>Proyectos</h1>
     <ul>
-        {{#tasks}}
-        <li><b>{{title}}</b>: {{description}}</li>
-        {{/tasks}}
+        {{#proyects}}
+        <li><b>{{name}}</b></li>
+        {{/proyects}}
     </ul>
 
     <!-- Botón para agregar nueva tarea -->
-    <a href="/new_task"><button>Agregar Nueva Tarea</button></a>
+    <button id="btnNuevoProyecto">Nuevo Proyecto</button>
+
+    <!-- Modal (Formulario) -->
+    <div id="modalProyecto" class="modal">
+        <div class="modal-contenido">
+            <span class="cerrar">&times;</span>
+            <h2>Nuevo Proyecto</h2>
+            <form id="formNuevoProyecto" action="/save_proyect" method="POST">
+                <input type="text" id="name" name="name" placeholder="Nombre del proyecto" required>
+                <button type="submit">Guardar</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="/js/index.js"></script>
 </body>
 </html>
