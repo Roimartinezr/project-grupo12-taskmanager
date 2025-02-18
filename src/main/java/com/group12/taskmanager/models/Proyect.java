@@ -1,14 +1,16 @@
 package com.group12.taskmanager.models;
 
-public class Grupo {
+public class Proyect {
     private Long id;
     private String nombre;
+    private Group group; // Relación con un grupo
 
-    public Grupo() {}
+    public Proyect() {}
 
-    public Grupo(Long id, String nombre) {
+    public Proyect(Long id, String nombre, Group group) {
         this.id = id;
         this.nombre = nombre;
+        this.group = group;
     }
 
     public Long getId() {
@@ -25,5 +27,13 @@ public class Grupo {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
+    }
+
+    public Group getGrupo() {
+        return group;
+    }
+
+    public void setGrupo(Group group) {
+        this.group = group;
     }
 }

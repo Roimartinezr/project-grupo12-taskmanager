@@ -1,13 +1,13 @@
 package com.group12.taskmanager.models;
 
-public class Usuario {
+public class User {
     private Long id;
     private String nombre;
     private String email;
 
-    public Usuario() {}
+    public User() {}
 
-    public Usuario(Long id, String nombre, String email) {
+    public User(Long id, String nombre, String email) {
         this.id = id;
         this.nombre = nombre;
         this.email = email;
