@@ -23,9 +23,8 @@ public class TaskController {
     @GetMapping("/")
     public String getTasks(Model model) {
         List<Task> tasks = taskService.getAllTasks();
-        model.addAttribute("tasks", tasks); // Pasar lista a la vista
-
-        return "index"; // Renderiza index.html
+        model.addAttribute("tasks", tasks);
+        return "index"; // Renderiza "index.mustache"
     }
 
     // 📌 2. Guardar una nueva tarea desde el formulario
