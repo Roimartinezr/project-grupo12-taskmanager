@@ -46,10 +46,10 @@ public class ProjectController {
     @GetMapping("/project/{id}")
     public String getProjectById(@PathVariable Long id, Model model) {
         Project project = projectService.findById(id);
-
+        List<Task> tasks = taskService.getProjectTasks(project);
         if (project != null) {
             model.addAttribute("idproject", project.getId());
-            model.addAttribute("tasks", project.getTasks()); // Pasar solo las tareas del proyecto
+            model.addAttribute("tasks", tasks); // Pasar solo las tareas del proyecto
         } else {
             model.addAttribute("idproject", null);
             model.addAttribute("tasks", new ArrayList<>()); // Lista vacía si no hay proyecto
@@ -59,10 +59,10 @@ public class ProjectController {
 
     @PostMapping("/project/{id}/save_task")
     @ResponseBody
-    public String saveTask(@RequestParam String title, @RequestParam String description, @RequestParam int projectID) {
-        Task newTask = new Task(title, description, projectID);
+    public String saveTask( @PathVariable int id, @RequestParam String title, @RequestParam String description) {
+        Task newTask = new Task(title, description, id);
         taskService.addTask(newTask); // Guardar la tarea en TaskService
-        return "redirect:/project/"+projectID; // Respuesta en texto plano
+        return "redirect:/project/"+id; // Respuesta en texto plano
     }
 
 }

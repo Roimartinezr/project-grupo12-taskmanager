@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const formData = new FormData(formNewTask);
         formData.append("projectID", projectID); // Agregar projectID a los datos enviados
 
-        fetch("/project/{id}/save_task", {
+        fetch(`/project/${projectID}/save_task`, {
             method: "POST",
             body: new URLSearchParams(formData),
             headers: { "Content-Type": "application/x-www-form-urlencoded" }
