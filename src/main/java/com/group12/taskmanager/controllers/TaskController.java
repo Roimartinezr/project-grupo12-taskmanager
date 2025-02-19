@@ -28,10 +28,13 @@ public class TaskController {
 
     //2. Guardar una nueva tarea desde el formulario
     @PostMapping("/save_task")
+    @ResponseBody
     public String saveTask(@RequestParam String title, @RequestParam String description) {
-        taskService.addTask(new Task(title, description)); // Guardar la tarea
-        return "redirect:/"; // Redirigir a la página principal
+        Task newTask = new Task(title, description);
+        taskService.addTask(newTask); // Guardar la tarea en TaskService
+        return "Tarea guardada correctamente"; // Respuesta en texto plano
     }
+
     @GetMapping("/new_task")
     public String newTask() {
         return "new_task"; // Devuelve el archivo new_task.mustache
