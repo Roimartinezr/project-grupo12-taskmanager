@@ -8,13 +8,25 @@ import java.util.List;
 
 @Service
 public class ProjectService {
-    private List<Project> projects = new ArrayList<>(); // Simulación de base de datos
+    private static List<Project> projects = new ArrayList<>(); // Simulación de base de datos
 
-    public List<Project> getAllProjects() {
+    public static List<Project> getAllProjects() {
         return projects;
     }
 
-    public void addProject(Project project) {
+    public static void addProject(Project project) {
         projects.add(project);
     }
+
+    public static Project findById(Long id) {
+        if (! projects.isEmpty()) {
+            for (Project project : projects) {
+                if (project.getId() == id) {
+                    return project;
+                }
+            }
+        }
+        return null;
+    }
+
 }

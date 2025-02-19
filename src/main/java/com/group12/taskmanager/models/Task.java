@@ -50,7 +50,7 @@ public class Task {
         return project;
     }
 
-    public void setProject(Project proyect) {
-        this.project = proyect;
+    public void setProject(Project project) {
+        this.project = project;
     }
 }

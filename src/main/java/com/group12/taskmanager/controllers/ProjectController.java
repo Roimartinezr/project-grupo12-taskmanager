@@ -7,21 +7,17 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 @Controller
 public class ProjectController {
-    private final ProjectService projectService;
 
-    public ProjectController(ProjectService projectService) {
-        this.projectService = projectService;
-    }
-
-    //1. Mostrar lista de proyectos en proyect.mustache
+    //1. Mostrar lista de proyectos en project.mustache
     @GetMapping("/")
     public String getProjects(Model model) {
-        List<Project> projects = projectService.getAllProjects();
+        List<Project> projects = ProjectService.getAllProjects();
         model.addAttribute("projects", projects);
         return "index"; // Renderiza "index.mustache"
     }
@@ -29,12 +25,27 @@ public class ProjectController {
     //2. Guardar una nueva tarea desde el formulario
     @PostMapping("/save_project")
     public String saveProject(@RequestParam String name) {
-        projectService.addProject(new Project(name, null));
+        ProjectService.addProject(new Project(name, null));
         return "redirect:/"; // Redirigir a la página principal
     }
 
     @GetMapping("/new_project")
     public ResponseEntity<?> newProject() {
         return ResponseEntity.ok(Collections.singletonMap("mensaje", "Abriendo modal"));
+    }
+
+    @GetMapping("/project/{id}")
+    public String getProjectById(@PathVariable Long id, Model model) {
+        Project project = ProjectService.findById(id);
+
+        if (project != null) {
+            model.addAttribute("project", project);
+            model.addAttribute("tasks", project.getTasks()); // Pasar solo las tareas del proyecto
+        } else {
+            model.addAttribute("project", null);
+            model.addAttribute("tasks", new ArrayList<>()); // Lista vacía si no hay proyecto
+        }
+
+        return "project"; // Renderiza project.mustache
     }
 }

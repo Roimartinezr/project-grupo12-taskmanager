@@ -8,8 +8,11 @@ import java.util.List;
 
 @Service
 public class TaskService {
+    private List<Task> tasks; // Simulación de base de datos
 
-    private List<Task> tasks = new ArrayList<>(); // Simulación de base de datos
+    public TaskService() {
+        tasks =  new ArrayList<>();
+    }
 
     public List<Task> getAllTasks() {
         return tasks;

@@ -1,9 +1,9 @@
 document.addEventListener("DOMContentLoaded", function() {
     console.log("JavaScript cargado correctamente");
 
-    const modal = document.getElementById("modalProyecto");
-    const btn = document.getElementById("btnNuevoProyecto");
-    const span = document.querySelector(".cerrar");
+    const modal = document.getElementById("modalProject");
+    const btn = document.getElementById("btnNewProject");
+    const span = document.querySelector(".close");
 
     // Mostrar el modal cuando se hace clic en el botón
     btn.addEventListener("click", function() {

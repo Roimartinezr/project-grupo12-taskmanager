@@ -23,7 +23,7 @@ public class TaskController {
     public String getTasks(Model model) {
         List<Task> tasks = taskService.getAllTasks();
         model.addAttribute("tasks", tasks);
-        return "proyect"; // Renderiza "proyect.mustache"
+        return "project"; // Renderiza "project.mustache"
     }
 
     //2. Guardar una nueva tarea desde el formulario
