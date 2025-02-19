@@ -9,20 +9,20 @@
 <body>
     <h1>Proyectos</h1>
     <ul>
-        {{#proyects}}
+        {{#projects}}
         <li><b>{{name}}</b></li>
-        {{/proyects}}
+        {{/projects}}
     </ul>
 
     <!-- Botón para agregar nueva tarea -->
-    <button id="btnNuevoProyecto">Nuevo Proyecto</button>
+    <button id="btnNewProject">Nuevo Proyecto</button>
 
     <!-- Modal (Formulario) -->
-    <div id="modalProyecto" class="modal">
-        <div class="modal-contenido">
+    <div id="modalProject" class="modal">
+        <div class="modal-content">
             <span class="cerrar">&times;</span>
             <h2>Nuevo Proyecto</h2>
-            <form id="formNuevoProyecto" action="/save_proyect" method="POST">
+            <form id="formNewProject" action="/save_project" method="POST">
                 <input type="text" id="name" name="name" placeholder="Nombre del proyecto" required>
                 <button type="submit">Guardar</button>
             </form>

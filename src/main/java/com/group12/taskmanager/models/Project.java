@@ -1,16 +1,17 @@
 package com.group12.taskmanager.models;
 
-public class Proyect {
+public class Project {
     private static int globalID = 0;
     private int id;
     private String name;
     private Group group; // Relación con un grupo
 
-    public Proyect() {}
 
-    public Proyect(String name, Group group) {
-        Proyect.globalID += 1;
-        this.id = Proyect.globalID;
+    public Project() {}
+
+    public Project(String name, Group group) {
+        Project.globalID += 1;
+        this.id = Project.globalID;
         this.name = name;
         this.group = group;
     }
