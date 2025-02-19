@@ -1,5 +1,6 @@
 package com.group12.taskmanager.services;
 
+import com.group12.taskmanager.models.Project;
 import com.group12.taskmanager.models.Task;
 import org.springframework.stereotype.Service;
 
@@ -21,5 +22,16 @@ public class TaskService {
     public void addTask(Task task) {
         tasks.add(task);
     }
+
+    public List<Task> getProjectTasks(Project project) {
+        List<Task> projectTasks = new ArrayList<>();
+        for (Task task : tasks) {
+            if (task.getProjectID() == project.getId()) {
+                projectTasks.add(task);
+            }
+        }
+        return projectTasks;
+    }
+
 }
 

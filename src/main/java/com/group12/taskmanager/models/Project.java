@@ -11,13 +11,21 @@ public class Project {
     private String name;
     private Group group; // Relación con un grupo
     private List<Task> tasks;
+    TaskService taskService;
 
     public Project(String name, Group group) {
         Project.globalID += 1;
-        this.id = Project.globalID;
+        id = Project.globalID;
         this.name = name;
         this.group = group;
-        this.tasks = new ArrayList<>();
+        taskService = new TaskService();
+        this.tasks = taskService.getProjectTasks(this);
+    }
+
+    private List<Task> getTasksFromDB() {
+        ArrayList<Task> tasks = new ArrayList<>();
+
+        return tasks;
     }
 
     public int getId() {
@@ -45,12 +53,13 @@ public class Project {
     }
 
     public List<Task> getTasks() {
-        return tasks != null ? tasks : new ArrayList<>();
+        tasks = taskService.getProjectTasks(this);
+        return tasks;
     }
     public void addTask(String title, String description) {
-        Task newTask = new Task(title, description, this);
+        tasks = taskService.getProjectTasks(this);
+        Task newTask = new Task(title, description, this.getId());
         tasks.add(newTask);
-        TaskService taskService = new TaskService();
         taskService.addTask(newTask);
     }
 

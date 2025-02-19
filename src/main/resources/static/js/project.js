@@ -3,6 +3,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const btnNewTask = document.getElementById("btnNewTask");
     const closeTaskModal = taskModal.querySelector(".close");
     const formNewTask = document.getElementById("formNewTask");
+    const projectID = document.getElementById("project-info").dataset.projectid;
 
     // Mostrar el modal cuando se hace clic en el botón
     btnNewTask.addEventListener("click", function() {
@@ -26,8 +27,9 @@ document.addEventListener("DOMContentLoaded", function() {
         event.preventDefault(); // Evita el recargo de la página
 
         const formData = new FormData(formNewTask);
+        formData.append("projectID", projectID); // Agregar projectID a los datos enviados
 
-        fetch("/tasks/save_task", {
+        fetch("/project/{id}/save_task", {
             method: "POST",
             body: new URLSearchParams(formData),
             headers: { "Content-Type": "application/x-www-form-urlencoded" }

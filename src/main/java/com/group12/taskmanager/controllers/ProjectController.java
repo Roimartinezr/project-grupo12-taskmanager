@@ -1,7 +1,9 @@
 package com.group12.taskmanager.controllers;
 
 import com.group12.taskmanager.models.Project;
+import com.group12.taskmanager.models.Task;
 import com.group12.taskmanager.services.ProjectService;
+import com.group12.taskmanager.services.TaskService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,11 +15,18 @@ import java.util.List;
 
 @Controller
 public class ProjectController {
+    private final ProjectService projectService;
+    private final TaskService taskService;
+
+    public ProjectController() {
+        this.projectService = new ProjectService();
+        this.taskService = new TaskService();
+    }
 
     //1. Mostrar lista de proyectos en project.mustache
     @GetMapping("/")
     public String getProjects(Model model) {
-        List<Project> projects = ProjectService.getAllProjects();
+        List<Project> projects = projectService.getAllProjects();
         model.addAttribute("projects", projects);
         return "index"; // Renderiza "index.mustache"
     }
@@ -25,7 +34,7 @@ public class ProjectController {
     //2. Guardar una nueva tarea desde el formulario
     @PostMapping("/save_project")
     public String saveProject(@RequestParam String name) {
-        ProjectService.addProject(new Project(name, null));
+        projectService.addProject(new Project(name, null));
         return "redirect:/"; // Redirigir a la página principal
     }
 
@@ -33,19 +42,27 @@ public class ProjectController {
     public ResponseEntity<?> newProject() {
         return ResponseEntity.ok(Collections.singletonMap("mensaje", "Abriendo modal"));
     }
-
+    // Listar tareas del proyecto
     @GetMapping("/project/{id}")
     public String getProjectById(@PathVariable Long id, Model model) {
-        Project project = ProjectService.findById(id);
+        Project project = projectService.findById(id);
 
         if (project != null) {
-            model.addAttribute("project", project);
+            model.addAttribute("idproject", project.getId());
             model.addAttribute("tasks", project.getTasks()); // Pasar solo las tareas del proyecto
         } else {
-            model.addAttribute("project", null);
+            model.addAttribute("idproject", null);
             model.addAttribute("tasks", new ArrayList<>()); // Lista vacía si no hay proyecto
         }
-
         return "project"; // Renderiza project.mustache
     }
+
+    @PostMapping("/project/{id}/save_task")
+    @ResponseBody
+    public String saveTask(@RequestParam String title, @RequestParam String description, @RequestParam int projectID) {
+        Task newTask = new Task(title, description, projectID);
+        taskService.addTask(newTask); // Guardar la tarea en TaskService
+        return "redirect:/project/"+projectID; // Respuesta en texto plano
+    }
+
 }
