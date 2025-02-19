@@ -5,16 +5,14 @@ public class Task {
     private int id;
     private String title;
     private String description;
-    private Proyect proyect; // Relación con un proyecto
+    private int projectID; // Relación con un proyecto
 
-    public Task() {}
-
-    public Task(String title, String description, Proyect proyect) {
+    public Task(String title, String description, int projectID) {
         Task.globalID = Task.globalID + 1;
         this.id = Task.globalID;
         this.title = title;
         this.description = description;
-        this.proyect = proyect;
+        this.projectID = projectID;
     }
 
     public Task(String title, String description) {
@@ -48,11 +46,11 @@ public class Task {
         this.description = description;
     }
 
-    public Proyect getProyecto() {
-        return proyect;
+    public int getProjectID() {
+        return projectID;
     }
 
-    public void setProyecto(Proyect proyect) {
-        this.proyect = proyect;
+    public void setProjectID(int projectID) {
+        this.projectID = projectID;
     }
 }
