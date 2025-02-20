@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // 🔹 Manejador del evento "Más opciones"
     function handleMoreOptionsClick(event) {
-        currentTaskId = event.currentTarget.dataset.taskid; // Guardamos el ID de la tarea
+        currentTaskId = event.currentTarget.dataset.taskid; // revisar que ID se esta guardando 
 
         // Obtener el modal de la tarea específica
         const taskItem = event.currentTarget.closest(".task-item");
