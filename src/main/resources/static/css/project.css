@@ -6,6 +6,16 @@
     margin-top: 10px;
 }
 
+.task-item {
+    position: relative;
+}
+
+.task-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
 .modal {
     display: none;
     position: fixed;
@@ -18,9 +28,7 @@
     justify-content: center;
     align-items: center;
 }
-.project-info {
-    display: none;
-}
+
 .modal-content {
     background-color: white;
     padding: 20px;
@@ -30,10 +38,10 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.close {
-    float: right;
-    font-size: 24px;
-    cursor: pointer;
+#modalOptions .modal-content button {
+    display: block;
+    width: 100%;
+    margin: 10px 0;
 }
 
 button {
@@ -55,4 +63,29 @@ input, textarea {
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 5px;
+}
+
+.btnMoreOptions {
+    background-color: #f0f0f0;
+    border: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-left: 10px;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.btnMoreOptions:hover {
+    background-color: #d6d6d6;
+}
+
+.btnMoreOptions img {
+    width: 12px;
+    height: 12px;
 }

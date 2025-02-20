@@ -76,11 +76,12 @@ public class ProjectController {
             @RequestParam String description,
             @RequestParam(required = false) MultipartFile image) {
 
-        String imagePath = null;
+        String imagePath = "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/200px-No_image_available.svg.png"; // Imagen de prueba
+
         if (image != null && !image.isEmpty()) {
             try {
-                // Ruta de almacenamiento (fuera del directorio temporal de Tomcat)
-                String uploadDir = System.getProperty("user.dir") + "/uploads/";
+                // Ruta de almacenamiento
+                String uploadDir = System.getProperty("user.dir") + "/src/main/resources/static/uploads/";
                 File uploadFolder = new File(uploadDir);
                 if (!uploadFolder.exists()) {
                     uploadFolder.mkdirs(); // Crea la carpeta si no existe
