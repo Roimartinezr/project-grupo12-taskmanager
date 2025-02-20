@@ -69,4 +69,19 @@ document.addEventListener("DOMContentLoaded", function() {
         // para la edición. Aqu todo depende de tu implementación final.
     });
 
+    // actualizar el titulo de tarea que sale en la ventana opciones
+    document.querySelectorAll(".btnMoreOptions").forEach(button => {
+        button.addEventListener("click", function() {
+            currentTaskId = this.dataset.taskid; // Guardamos el id de la tarea
+
+            // Obtener el título de la tarea actual
+            const taskTitle = this.closest(".task-item").querySelector("b").innerText;
+
+            // Actualizar el título dentro del modal de opciones
+            modalOptions.querySelector("h2").innerText = taskTitle;
+
+            modalOptions.style.display = "flex";
+        });
+    });
+
 });
