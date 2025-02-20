@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+</head>
+<body>
+<h2>Iniciar Sesión</h2>
+{{#error}}
+    <p style="color: red;">{{error}}</p>
+{{/error}}
+<form action="/login" method="post">
+    <label>Usuario: <input type="text" name="username"></label><br>
+    <label>Contraseña: <input type="password" name="password"></label><br>
+    <button type="submit">Ingresar</button>
+</form>
+</body>
+</html>
