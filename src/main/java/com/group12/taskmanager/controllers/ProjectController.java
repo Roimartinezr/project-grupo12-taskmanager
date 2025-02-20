@@ -103,7 +103,20 @@ public class ProjectController {
 
         Task newTask = new Task(title, description, id, imagePath);
         taskService.addTask(newTask);
+
         return "redirect:/project/" + id;
+    }
+
+    @DeleteMapping("/project/{id}/delete_task")
+    public ResponseEntity<?> deleteTask(@PathVariable int id, @RequestParam int taskId) {
+        taskService.removeTask(taskId);
+        boolean removed = taskService.findTaskById(id) == null;
+
+        if (removed) {
+            return ResponseEntity.ok(Collections.singletonMap("message", "Tarea eliminada correctamente"));
+        } else {
+            return ResponseEntity.status(404).body(Collections.singletonMap("error", "Tarea no encontrada"));
+        }
     }
 
 
