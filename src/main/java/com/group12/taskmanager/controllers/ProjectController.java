@@ -29,7 +29,6 @@ public class ProjectController {
         this.taskService = new TaskService();
     }
 
-    // Cambiar la ruta de "/" a "/projects"
     @GetMapping("/projects")
     public String getProjects(Model model, HttpSession session) {
         if (session.getAttribute("user") == null) {
