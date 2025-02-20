@@ -1,4 +1,11 @@
-/* Estilos para el modal */
+.task-image {
+    width: 100px;
+    height: 100px;
+    background-size: cover;
+    background-position: center center;
+    margin-top: 10px;
+}
+
 .modal {
     display: none;
     position: fixed;

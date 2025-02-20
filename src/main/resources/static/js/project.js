@@ -24,21 +24,22 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Enviar datos por AJAX y actualizar la lista de tareas
     formNewTask.addEventListener("submit", function(event) {
-        event.preventDefault(); // Evita el recargo de la página
+        event.preventDefault();
 
         const formData = new FormData(formNewTask);
-        formData.append("projectID", projectID); // Agregar projectID a los datos enviados
+        formData.append("projectID", projectID);
 
         fetch(`/project/${projectID}/save_task`, {
             method: "POST",
-            body: new URLSearchParams(formData),
-            headers: { "Content-Type": "application/x-www-form-urlencoded" }
+            body: formData
         })
             .then(response => response.text())
             .then(data => {
-                console.log(data); // Mensaje de confirmación en la consola
-                location.reload(); // Recargar la página para mostrar la nueva tarea
+                console.log(data);
+                location.reload();
             })
             .catch(error => console.error("Error al guardar la tarea:", error));
     });
+
+
 });
