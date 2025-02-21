@@ -119,5 +119,21 @@ public class ProjectController {
         }
     }
 
+    @PutMapping("/project/{id}/edit_task")
+    public ResponseEntity<?> editTask(
+            @PathVariable int id,
+            @RequestParam int taskId,
+            @RequestParam String title,
+            @RequestParam String description,
+            @RequestParam String imagePath) {
+
+        Task task = taskService.findTaskById(taskId);
+        if (task == null) {
+            return ResponseEntity.status(404).body(Collections.singletonMap("error", "Tarea no encontrada"));
+        }
+
+        taskService.updateTask(taskId, title, description, imagePath);
+        return ResponseEntity.ok(Collections.singletonMap("message", "Tarea actualizada correctamente"));
+    }
 
 }

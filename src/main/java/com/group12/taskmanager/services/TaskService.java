@@ -24,9 +24,20 @@ public class TaskService {
     }
 
     public void removeTask(int id) {
-        Task rmtask = findTaskById(id);
-        tasks.remove(rmtask);
-        System.out.println("Removed task: " + rmtask);
+        Task task = findTaskById(id);
+        tasks.remove(task);
+        System.out.println("Removed task: " + task);
+    }
+
+    public void updateTask(int id, String title, String description, String imagePath) {
+        Task task = findTaskById(id);
+        if (title != null)
+            task.setTitle(title);
+        if (description != null)
+            task.setDescription(description);
+        if (imagePath != null)
+            task.setImagePath(imagePath);
+        System.out.println("Updated task: " + task + " => id: " + id);
     }
 
     public Task findTaskById(int id) {
