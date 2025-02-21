@@ -133,14 +133,42 @@ public class ProjectController {
             @RequestParam int taskId,
             @RequestParam String title,
             @RequestParam String description,
-            @RequestParam String imagePath) {
+            @RequestParam(required = false) MultipartFile image,
+            @RequestParam(required = false) String imagePath) {
 
         Task task = taskService.findTaskById(taskId);
         if (task == null) {
             return ResponseEntity.status(404).body(Collections.singletonMap("error", "Tarea no encontrada"));
         }
 
-        taskService.updateTask(taskId, title, description, imagePath);
+        String newImagePath = imagePath; // Mantener la imagen original si no se sube una nueva
+
+        if (image != null && !image.isEmpty()) {
+            try {
+                // Ruta de almacenamiento
+                String uploadDir = System.getProperty("user.dir") + "/src/main/resources/static/uploads/";
+                File uploadFolder = new File(uploadDir);
+                if (!uploadFolder.exists()) {
+                    uploadFolder.mkdirs();
+                }
+
+                // Generar un nombre de archivo único
+                String fileName = UUID.randomUUID().toString() + "_" + image.getOriginalFilename();
+                File destinationFile = new File(uploadDir + fileName);
+
+                // Guardar el archivo
+                image.transferTo(destinationFile);
+
+                // Actualizar el imagePath
+                newImagePath = "/uploads/" + fileName;
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        taskService.updateTask(taskId, title, description, newImagePath);
+
         return ResponseEntity.ok(Collections.singletonMap("message", "Tarea actualizada correctamente"));
     }
 

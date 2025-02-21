@@ -110,16 +110,20 @@ document.addEventListener("DOMContentLoaded", function() {
         // Rellenar el formulario con los valores actuales
         formNewTask.querySelector("input[name='title']").value = title;
         formNewTask.querySelector("textarea[name='description']").value = description;
+        formNewTask.querySelector("input[name='image']").value = null; // Limpiar input de imagen
 
-        // Agregar imagePath a un campo oculto para mantener la imagen original si no se cambia
+        // Agregar o actualizar el campo oculto de imagePath
         let hiddenImageInput = formNewTask.querySelector("input[name='imagePath']");
-        if (!hiddenImageInput) {
+        // Agregar imagePath solo si existe una imagen
+        if (!hiddenImageInput && imagePath) {
             hiddenImageInput = document.createElement("input");
             hiddenImageInput.type = "hidden";
             hiddenImageInput.name = "imagePath";
             formNewTask.appendChild(hiddenImageInput);
         }
-        hiddenImageInput.value = imagePath;
+        if (hiddenImageInput) {
+            hiddenImageInput.value = imagePath || ""; // No asigna "" si no hay imagen
+        }
 
         // Mostrar el modal
         modalTask.style.display = "flex";
