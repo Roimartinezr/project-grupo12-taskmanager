@@ -2,7 +2,6 @@ package com.group12.taskmanager.models;
 
 import com.group12.taskmanager.services.TaskService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Project {
@@ -11,21 +10,15 @@ public class Project {
     private String name;
     private Group group; // Relación con un grupo
     private List<Task> tasks;
-    TaskService taskService;
+    private final TaskService TASKSERVICE;
 
     public Project(String name, Group group) {
         Project.globalID += 1;
         id = Project.globalID;
         this.name = name;
         this.group = group;
-        taskService = new TaskService();
-        this.tasks = taskService.getProjectTasks(this);
-    }
-
-    private List<Task> getTasksFromDB() {
-        ArrayList<Task> tasks = new ArrayList<>();
-
-        return tasks;
+        TASKSERVICE = new TaskService();
+        this.tasks = TASKSERVICE.getProjectTasks(this);
     }
 
     public int getId() {
@@ -53,14 +46,14 @@ public class Project {
     }
 
     public List<Task> getTasks() {
-        tasks = taskService.getProjectTasks(this);
+        tasks = TASKSERVICE.getProjectTasks(this);
         return tasks;
     }
     public void addTask(String title, String description) {
-        tasks = taskService.getProjectTasks(this);
+        tasks = TASKSERVICE.getProjectTasks(this);
         Task newTask = new Task(title, description, this.getId());
         tasks.add(newTask);
-        taskService.addTask(newTask);
+        TASKSERVICE.addTask(newTask);
     }
 
 }
