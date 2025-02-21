@@ -14,19 +14,16 @@ document.addEventListener("DOMContentLoaded", function() {
             button.removeEventListener("click", handleMoreOptionsClick);
             button.addEventListener("click", handleMoreOptionsClick);
         });
-
         // Botones "Eliminar"
         document.querySelectorAll(".btnDeleteTask").forEach(button => {
             button.removeEventListener("click", handleDeleteTask);
             button.addEventListener("click", handleDeleteTask);
         });
-
         // Botones "Editar"
         document.querySelectorAll(".btnEditTask").forEach(button => {
             button.removeEventListener("click", handleEditTask);
             button.addEventListener("click", handleEditTask);
         });
-
         // Cerrar modal haciendo clic en el fondo
         document.querySelectorAll(".modal").forEach(modal => {
             modal.removeEventListener("mousedown", handleModalMouseDown);
@@ -49,7 +46,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
             // 🔹 Solo asignamos el evento si no está ya asignado
             if (!modal.dataset.eventAssigned) {
-                modal.addEventListener("click", handleModalClose);
+                modal.addEventListener("mousedown", handleModalMouseDown);
+                modal.addEventListener("mouseup", handleModalMouseUp);
                 modal.dataset.eventAssigned = "true"; // Marcar como asignado
             }
         }

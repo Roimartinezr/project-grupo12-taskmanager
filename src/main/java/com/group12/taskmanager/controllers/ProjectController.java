@@ -24,9 +24,17 @@ public class ProjectController {
     private final ProjectService projectService;
     private final TaskService taskService;
 
+    // Test Data
     public ProjectController() {
         this.projectService = new ProjectService();
         this.taskService = new TaskService();
+        for (int i = 1; i <= 5; i++) {
+            Project newProject = new Project("Proyecto"+i, null);
+            projectService.addProject(newProject);
+            for (int j = 0; j < 10; j++) {
+                taskService.addTask(new Task("tarea"+j, "Esto es un ejemplo"+i+j, newProject.getId()));
+            }
+        }
     }
 
     @GetMapping("/projects")
