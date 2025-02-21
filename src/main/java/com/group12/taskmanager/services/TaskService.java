@@ -23,6 +23,21 @@ public class TaskService {
         tasks.add(task);
     }
 
+    public void removeTask(int id) {
+        Task rmtask = findTaskById(id);
+        tasks.remove(rmtask);
+        System.out.println("Removed task: " + rmtask);
+    }
+
+    public Task findTaskById(int id) {
+        for (Task task : tasks) {
+            if (task.getId() == id) {
+                return task;
+            }
+        }
+        return null;
+    }
+
     public List<Task> getProjectTasks(Project project) {
         List<Task> projectTasks = new ArrayList<>();
         for (Task task : tasks) {
