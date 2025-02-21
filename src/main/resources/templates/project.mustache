@@ -9,9 +9,9 @@
 <body>
     <h1>Lista de Tareas</h1>
 
-    <ul>
+    <ul id="task-list">
         {{#tasks}}
-            <li class="task-item">
+            <li class="task-item" data-taskid="{{id}}">
                 <div class="task-content">
                     <b>{{title}}</b>: {{description}}
                     <button class="btnMoreOptions" data-taskid="{{id}}">
@@ -23,11 +23,11 @@
                     <div class="task-image" style="background-image: url('{{{imagePath}}}');"></div>
                 {{/imagePath}}
 
-                <div id="modalOptions" class="modal">
+                <div class="modalOptions modal">
                     <div class="modal-content">
                         <h2>{{title}}</h2>
-                        <button id="btnDeleteTask" data-taskid="{{id}}">Eliminar Tarea</button>
-                        <button id="btnEditTask" data-taskid="{{id}}">Editar Tarea</button>
+                        <button class="btnDeleteTask" data-taskid="{{id}}">Eliminar Tarea</button>
+                        <button class="btnEditTask" data-taskid="{{id}}">Editar Tarea</button>
                     </div>
                 </div>
             </li>

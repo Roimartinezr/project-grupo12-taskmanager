@@ -110,7 +110,7 @@ public class ProjectController {
     @DeleteMapping("/project/{id}/delete_task")
     public ResponseEntity<?> deleteTask(@PathVariable int id, @RequestParam int taskId) {
         taskService.removeTask(taskId);
-        boolean removed = taskService.findTaskById(id) == null;
+        boolean removed = taskService.findTaskById(taskId) == null;
 
         if (removed) {
             return ResponseEntity.ok(Collections.singletonMap("message", "Tarea eliminada correctamente"));
