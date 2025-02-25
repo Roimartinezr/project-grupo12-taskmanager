@@ -7,28 +7,36 @@
     <title>Home</title>
 </head>
 <body>
-    <h1>Proyectos</h1>
-    <ul>
-        {{#projects}}
-            <li><a href="/project/{{id}}"><b>{{name}}</b></a></li>
-        {{/projects}}
-    </ul>
+<h1>Proyectos</h1>
+<ul>
+    {{#projects}}
+        <li><a href="/project/{{id}}"><b>{{name}}</b></a></li>
+    {{/projects}}
+</ul>
 
-    <!-- Botón para agregar nueva tarea -->
-    <button id="btnNewProject">Nuevo Proyecto</button>
 
-    <!-- Modal (Formulario) -->
-    <div id="modalProject" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>Nuevo Proyecto</h2>
-            <form id="formNewProject" action="/save_project" method="POST">
-                <input type="text" id="name" name="name" placeholder="Nombre del proyecto" required>
-                <button type="submit">Guardar</button>
-            </form>
-        </div>
+
+<!-- Botón para agregar nueva tarea -->
+<button id="btnNewProject">Nuevo Proyecto</button>
+
+<div class="container">
+    <a href="/logout" class="logout-btn">Cerrar Sesión</a>
+</div>
+
+<!-- Modal (Formulario) -->
+<div id="modalProject" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Nuevo Proyecto</h2>
+        <form id="formNewProject" action="/save_project" method="POST">
+            <input type="text" id="name" name="name" placeholder="Nombre del proyecto" required>
+            <button type="submit">Guardar</button>
+
+        </form>
     </div>
+</div>
 
-    <script src="/js/index.js"></script>
+
+<script src="/js/index.js"></script>
 </body>
 </html>

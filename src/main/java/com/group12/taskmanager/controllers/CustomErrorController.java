@@ -32,6 +32,6 @@ public class CustomErrorController implements ErrorController {
         }
 
         model.addAttribute("errorMessage", errorMessage);
-        return "error"; // Renderiza error.mustache
+        return "error"; // Renderiza el error.mustache
     }
 }

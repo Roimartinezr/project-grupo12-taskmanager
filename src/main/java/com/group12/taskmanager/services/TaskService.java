@@ -9,10 +9,21 @@ import java.util.List;
 
 @Service
 public class TaskService {
+    private static TaskService instance; // Única instancia
     private List<Task> tasks; // Simulación de base de datos
 
-    public TaskService() {
+    private TaskService() {
         tasks =  new ArrayList<>();
+    }
+    public static TaskService getInstance() {
+        if (instance == null) {
+            synchronized (TaskService.class) { // Doble verificación para hilos
+                if (instance == null) {
+                    instance = new TaskService();
+                }
+            }
+        }
+        return instance;
     }
 
     public List<Task> getAllTasks() {

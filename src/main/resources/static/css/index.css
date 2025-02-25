@@ -31,6 +31,22 @@
     font-size: 24px;
     cursor: pointer;
 }
+/* Botón de Cerrar Sesión */
+.logout-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background-color: #4d74ff;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.logout-btn:hover {
+    background-color: #003d99;
+}
 
 /* Formulario */
 form {
@@ -49,6 +65,7 @@ input {
     font-size: 16px;
 }
 
+/* Botones */
 button {
     padding: 10px;
     background-color: #007BFF;
@@ -60,3 +77,4 @@ button {
 button:hover {
     background-color: #0056b3;
 }
+

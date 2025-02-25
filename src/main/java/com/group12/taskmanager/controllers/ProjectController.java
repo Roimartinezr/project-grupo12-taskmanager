@@ -26,13 +26,13 @@ public class ProjectController {
 
     // Test Data
     public ProjectController() {
-        this.projectService = new ProjectService();
-        this.taskService = new TaskService();
+        this.projectService = ProjectService.getInstance();
+        this.taskService = TaskService.getInstance();
         for (int i = 1; i <= 5; i++) {
             Project newProject = new Project("Proyecto"+i, null);
             projectService.addProject(newProject);
             for (int j = 0; j < 10; j++) {
-                taskService.addTask(new Task("tarea"+j, "Esto es un ejemplo"+i+j, newProject.getId()));
+                taskService.addTask(new Task("tarea"+j, "Esto es un ejemplo"+i+j, newProject.getId(), null));
             }
         }
     }
@@ -59,7 +59,7 @@ public class ProjectController {
     }
 
     @GetMapping("/project/{id}")
-    public String getProjectById(@PathVariable Long id, Model model, HttpSession session) {
+    public String getProjectById(@PathVariable int id, Model model, HttpSession session) {
         if (session.getAttribute("user") == null) {
             return "redirect:/"; // Si no está autenticado, redirigir al login
         }
@@ -109,8 +109,10 @@ public class ProjectController {
             }
         }
 
-        Task newTask = new Task(title, description, id, imagePath);
-        taskService.addTask(newTask);
+        //Task newTask = new Task(title, description, id, imagePath);
+        Project currentProject = projectService.findById(id);
+        currentProject.addTask(title, description, imagePath);
+        //taskService.addTask(newTask);
 
         return "redirect:/project/" + id;
     }
