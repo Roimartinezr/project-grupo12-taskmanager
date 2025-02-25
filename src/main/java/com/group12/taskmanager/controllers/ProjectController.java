@@ -1,9 +1,13 @@
 package com.group12.taskmanager.controllers;
 
+import com.group12.taskmanager.models.Group;
 import com.group12.taskmanager.models.Project;
 import com.group12.taskmanager.models.Task;
+import com.group12.taskmanager.models.User;
+import com.group12.taskmanager.services.GroupService;
 import com.group12.taskmanager.services.ProjectService;
 import com.group12.taskmanager.services.TaskService;
+import com.group12.taskmanager.services.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,35 +25,48 @@ import java.util.UUID;
 
 @Controller
 public class ProjectController {
-    private final ProjectService projectService;
-    private final TaskService taskService;
+    private final ProjectService PROJECT_SERVICE;
+    private final TaskService TASK_SERVICE;
 
     // Test Data
     public ProjectController() {
-        this.projectService = ProjectService.getInstance();
-        this.taskService = TaskService.getInstance();
+        this.PROJECT_SERVICE = ProjectService.getInstance();
+        this.TASK_SERVICE = TaskService.getInstance();
         for (int i = 1; i <= 5; i++) {
-            Project newProject = new Project("Proyecto"+i, null);
-            projectService.addProject(newProject);
+            Project newProject = new Project("Proyecto_"+i, GroupService.getInstance().findGroupById(1));
+            PROJECT_SERVICE.addProject(newProject);
             for (int j = 0; j < 10; j++) {
-                taskService.addTask(new Task("tarea"+j, "Esto es un ejemplo"+i+j, newProject.getId(), null));
+                TASK_SERVICE.addTask(new Task("tarea_"+j, "Esto es un ejemplo"+i+j, newProject.getId(), null));
             }
         }
     }
 
     @GetMapping("/projects")
     public String getProjects(Model model, HttpSession session) {
-        if (session.getAttribute("user") == null) {
+        User currentUser = (User) session.getAttribute("user");
+        if (currentUser == null) {
             return "redirect:/"; // Si no está autenticado, redirigir al login
         }
-        List<Project> projects = projectService.getAllProjects();
+        model.addAttribute("user", currentUser);
+
+        List<Project> projects = new ArrayList<>();
+        for (Group group : currentUser.getGroups()) {
+            projects.addAll(PROJECT_SERVICE.getProjectsByGroup(group));
+        }
         model.addAttribute("projects", projects);
+
         return "index"; // Renderiza "index.mustache"
     }
 
     @PostMapping("/save_project")
-    public String saveProject(@RequestParam String name) {
-        projectService.addProject(new Project(name, null));
+    public String saveProject(@RequestParam String name, @RequestParam int userId) {
+        User user = UserService.getInstance().findUserById(userId);
+        if (user == null) {
+            return "redirect:/"; // Manejo de error si el usuario no existe
+        }
+
+        Project newProject = new Project(name, user.getGroups().getFirst()); // Esto se tendrá que cambiar, tal como está asigna cada nuevo proyecto al grupo personal de cada user
+        PROJECT_SERVICE.addProject(newProject);
         return "redirect:/projects"; // Redirigir a la página principal
     }
 
@@ -63,8 +80,8 @@ public class ProjectController {
         if (session.getAttribute("user") == null) {
             return "redirect:/"; // Si no está autenticado, redirigir al login
         }
-        Project project = projectService.findById(id);
-        List<Task> tasks = taskService.getProjectTasks(project);
+        Project project = PROJECT_SERVICE.findById(id);
+        List<Task> tasks = TASK_SERVICE.getProjectTasks(project);
         if (project != null) {
             model.addAttribute("idproject", project.getId());
             model.addAttribute("tasks", tasks);
@@ -109,18 +126,18 @@ public class ProjectController {
             }
         }
 
-        //Task newTask = new Task(title, description, id, imagePath);
-        Project currentProject = projectService.findById(id);
+        Project currentProject = PROJECT_SERVICE.findById(id);
         currentProject.addTask(title, description, imagePath);
-        //taskService.addTask(newTask);
 
         return "redirect:/project/" + id;
     }
 
     @DeleteMapping("/project/{id}/delete_task")
     public ResponseEntity<?> deleteTask(@PathVariable int id, @RequestParam int taskId) {
-        taskService.removeTask(taskId);
-        boolean removed = taskService.findTaskById(taskId) == null;
+        Project currentProject = PROJECT_SERVICE.findById(id);
+        currentProject.removeTask(taskId);
+
+        boolean removed = TASK_SERVICE.findTaskById(taskId) == null;
 
         if (removed) {
             return ResponseEntity.ok(Collections.singletonMap("message", "Tarea eliminada correctamente"));
@@ -138,7 +155,7 @@ public class ProjectController {
             @RequestParam(required = false) MultipartFile image,
             @RequestParam(required = false) String imagePath) {
 
-        Task task = taskService.findTaskById(taskId);
+        Task task = TASK_SERVICE.findTaskById(taskId);
         if (task == null) {
             return ResponseEntity.status(404).body(Collections.singletonMap("error", "Tarea no encontrada"));
         }
@@ -169,7 +186,7 @@ public class ProjectController {
             }
         }
 
-        taskService.updateTask(taskId, title, description, newImagePath);
+        TASK_SERVICE.updateTask(taskId, title, description, newImagePath);
 
         return ResponseEntity.ok(Collections.singletonMap("message", "Tarea actualizada correctamente"));
     }

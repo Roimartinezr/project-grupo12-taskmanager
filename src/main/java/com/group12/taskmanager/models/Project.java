@@ -52,6 +52,13 @@ public class Project {
         tasks.add(newTask);
         TASKSERVICE.addTask(newTask);
     }
-
+    public void removeTask(int taskID) {
+        for (Task t : tasks) {
+            if (t.getId() == taskID) {
+                tasks.remove(t);
+            }
+        }
+        TASKSERVICE.removeTask(taskID);
+    }
 
 }

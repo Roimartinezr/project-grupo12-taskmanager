@@ -29,7 +29,6 @@ public class UserService {
         return USERS;
     }
     public void addUser(User user) {
-        if (!USERS.contains(user))
             USERS.add(user);
     }
 
@@ -41,4 +40,21 @@ public class UserService {
         }
         return null;
     }
+    public User findUserByUsername(String userName) {
+        for (User user : USERS) {
+            if (user.getName().equals(userName)) {
+                return user;
+            }
+        }
+        return null;
+    }
+    public User findUserByEmail(String email) {
+        for (User user : USERS) {
+            if (user.getEmail().equals(email)) {
+                return user;
+            }
+        }
+        return null;
+    }
+
 }

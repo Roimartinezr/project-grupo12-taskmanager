@@ -48,7 +48,7 @@ public class ProjectService {
     public List<Project> getProjectsByGroup(Group group) {
         List<Project> list = new ArrayList<>();
         for (Project project : PROJECTS) {
-            if (project.getGroup().getId() == group.getId()) {
+            if (project.getGroup() != null && project.getGroup().getId() == group.getId()) {
                 list.add(project);
             }
         }
