@@ -2,24 +2,22 @@ package com.group12.taskmanager.models;
 
 import com.group12.taskmanager.services.GroupUserService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Group {
     private static int globalID = 0;
     private int id;
-    private String nombre;
+    private String name;
     private List<User> users;
-    private GroupUserService groupUserService = new GroupUserService();
+    private final GroupUserService GROUPUSER_SERVICE = new GroupUserService();
 
-    public Group(String nombre, User firstUser) {
+    public Group(String name, User firstUser) {
         Group.globalID++;
         this.id = globalID;
-        this.nombre = nombre;
-        users = new ArrayList<>();
+        this.name = name;
+        this.users = GROUPUSER_SERVICE.getGroupUsers(this.id);
         users.add(firstUser);
-
-        groupUserService.addEntry(this.id, firstUser.getId());
+        GROUPUSER_SERVICE.addEntry(this, firstUser);
     }
 
     public int getId() {
@@ -29,11 +27,11 @@ public class Group {
         this.id = id;
     }
 
-    public String getNombre() {
-        return nombre;
+    public String getName() {
+        return name;
     }
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public List<User> getUsers() {
@@ -41,7 +39,7 @@ public class Group {
     }
     public void addUser(User user) {
         users.add(user);
-        groupUserService.addEntry(this.id, user.getId()); // Actualizar tabla relación
+        GROUPUSER_SERVICE.addEntry(this, user); // Actualizar tabla relación
         user.updateGroups(this); // Actualizar registro de grupos del usuario
     }
 

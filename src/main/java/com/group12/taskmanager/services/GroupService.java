@@ -9,13 +9,26 @@ import java.util.List;
 
 @Service
 public class GroupService {
-    private List<Group> groups;
-    private final UserService USERSERVICE;
+    private final List<Group> GROUPS;
 
     public GroupService() {
-        this.groups = new ArrayList<>();
-        this.USERSERVICE = new UserService();
+        this.GROUPS = new ArrayList<>();
     }
 
-    public List<Group> getGroups() {}
+    public List<Group> getAllGroups() {
+        return GROUPS;
+    }
+    public void addGroup(Group group) {
+        if (!GROUPS.contains(group))
+            GROUPS.add(group);
+    }
+
+    public Group findGroupById(int id) {
+        for (Group group : GROUPS) {
+            if (group.getId() == id) {
+                return group;
+            }
+        }
+        return null;
+    }
 }

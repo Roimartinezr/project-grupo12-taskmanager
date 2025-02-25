@@ -8,13 +8,26 @@ import java.util.List;
 
 @Service
 public class UserService {
-    private List<User> users;
+    private final List<User> USERS;
 
     public UserService() {
-        users = new ArrayList<>();
+        USERS = new ArrayList<>();
     }
 
     public List<User> getAllUsers() {
-        return users;
+        return USERS;
+    }
+    public void addUser(User user) {
+        if (!USERS.contains(user))
+            USERS.add(user);
+    }
+
+    public User findUserById(int id) {
+        for (User user : USERS) {
+            if (user.getId() == id) {
+                return user;
+            }
+        }
+        return null;
     }
 }
