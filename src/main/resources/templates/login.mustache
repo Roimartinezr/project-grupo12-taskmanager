@@ -2,17 +2,26 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="/css/login.css">
     <title>Login</title>
 </head>
 <body>
-<h2>Iniciar Sesión</h2>
-{{#error}}
-    <p style="color: red;">{{error}}</p>
-{{/error}}
-<form action="/login" method="post">
-    <label>Usuario: <input type="text" name="username"></label><br>
-    <label>Contraseña: <input type="password" name="password"></label><br>
-    <button type="submit">Ingresar</button>
-</form>
+<div class="container">
+    <h1>Iniciar Sesión</h1>
+
+    {{#error}}
+        <p class="error">{{error}}</p>
+    {{/error}}
+
+    <form action="/login" method="post" class="login-form">
+        <label for="username">Usuario:</label>
+        <input type="text" id="username" name="username" required>
+
+        <label for="password">Contraseña:</label>
+        <input type="password" id="password" name="password" required>
+
+        <button type="submit">Ingresar</button>
+    </form>
+</div>
 </body>
 </html>
