@@ -8,7 +8,11 @@ import java.util.List;
 
 @Service
 public class ProjectService {
-    private List<Project> projects = new ArrayList<>(); // Simulación de base de datos
+    private List<Project> projects;
+
+    public ProjectService() {
+        this.projects = new ArrayList<>();  // Simulación de base de datos
+    }
 
     public List<Project> getAllProjects() {
         return projects;
