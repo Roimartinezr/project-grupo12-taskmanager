@@ -8,14 +8,6 @@ public class Task {
     private int projectID; // Relación con un proyecto
     private String imagePath;
 
-    public Task(String title, String description, int projectID) {
-        Task.globalID = Task.globalID + 1;
-        this.id = Task.globalID;
-        this.title = title;
-        this.description = description;
-        this.projectID = projectID;
-    }
-
     public Task(String title, String description, int projectID, String imagePath) {
         Task.globalID = Task.globalID + 1;
         this.id = Task.globalID;

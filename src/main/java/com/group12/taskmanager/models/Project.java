@@ -17,14 +17,13 @@ public class Project {
         id = Project.globalID;
         this.name = name;
         this.group = group;
-        TASKSERVICE = new TaskService();
+        TASKSERVICE = TaskService.getInstance();
         this.tasks = TASKSERVICE.getProjectTasks(this);
     }
 
     public int getId() {
         return id;
     }
-
     public void setId(int id) {
         this.id = id;
     }
@@ -32,16 +31,14 @@ public class Project {
     public String getName() {
         return name;
     }
-
     public void setName(String name) {
         this.name = name;
     }
 
-    public Group getGrupo() {
+    public Group getGroup() {
         return group;
     }
-
-    public void setGrupo(Group group) {
+    public void setGroup(Group group) {
         this.group = group;
     }
 
@@ -49,11 +46,12 @@ public class Project {
         tasks = TASKSERVICE.getProjectTasks(this);
         return tasks;
     }
-    public void addTask(String title, String description) {
+    public void addTask(String title, String description, String imgPath) {
         tasks = TASKSERVICE.getProjectTasks(this);
-        Task newTask = new Task(title, description, this.getId());
+        Task newTask = new Task(title, description, this.getId(), imgPath);
         tasks.add(newTask);
         TASKSERVICE.addTask(newTask);
     }
+
 
 }

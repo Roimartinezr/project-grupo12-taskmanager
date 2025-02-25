@@ -1,6 +1,7 @@
 package com.group12.taskmanager.models;
 
 import com.group12.taskmanager.services.GroupUserService;
+import com.group12.taskmanager.services.ProjectService;
 
 import java.util.List;
 
@@ -9,15 +10,18 @@ public class Group {
     private int id;
     private String name;
     private List<User> users;
-    private final GroupUserService GROUPUSER_SERVICE = new GroupUserService();
+    private List<Project> projects;
+    private final GroupUserService GROUP_USER_SERVICE = GroupUserService.getInstance();
+    private final ProjectService PROJECT_SERVICE = ProjectService.getInstance();
 
     public Group(String name, User firstUser) {
         Group.globalID++;
         this.id = globalID;
         this.name = name;
-        this.users = GROUPUSER_SERVICE.getGroupUsers(this.id);
+        this.users = GROUP_USER_SERVICE.getGroupUsers(this.id);
+        this.projects = PROJECT_SERVICE.getProjectsByGroup(this);
         users.add(firstUser);
-        GROUPUSER_SERVICE.addEntry(this, firstUser);
+        GROUP_USER_SERVICE.addEntry(this, firstUser);
     }
 
     public int getId() {
@@ -39,8 +43,18 @@ public class Group {
     }
     public void addUser(User user) {
         users.add(user);
-        GROUPUSER_SERVICE.addEntry(this, user); // Actualizar tabla relación
+        GROUP_USER_SERVICE.addEntry(this, user); // Actualizar tabla relación
         user.updateGroups(this); // Actualizar registro de grupos del usuario
     }
 
+    public List<Project> getProjects() {
+        projects = PROJECT_SERVICE.getProjectsByGroup(this);
+        return projects;
+    }
+    public void addProject(String projectName) {
+        projects = PROJECT_SERVICE.getProjectsByGroup(this);
+        Project newProject = new Project(projectName, this);
+        projects.add(newProject);
+        PROJECT_SERVICE.addProject(newProject);
+    }
 }

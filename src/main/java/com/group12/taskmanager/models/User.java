@@ -11,7 +11,7 @@ public class User {
     private String email;
     private String password;
     private List<Group> groups;
-    GroupUserService groupUserService = new GroupUserService();
+    GroupUserService groupUserService = GroupUserService.getInstance();
 
     public User(String name, String email, String password) {
         User.globalID++;

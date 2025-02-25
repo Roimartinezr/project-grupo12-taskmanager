@@ -8,10 +8,21 @@ import java.util.List;
 
 @Service
 public class UserService {
+    private static UserService instance; // Única instancia
     private final List<User> USERS;
 
-    public UserService() {
+    private UserService() {
         USERS = new ArrayList<>();
+    }
+    public static UserService getInstance() {
+        if (instance == null) {
+            synchronized (UserService.class) {
+                if (instance == null) {
+                    instance = new UserService();
+                }
+            }
+        }
+        return instance;
     }
 
     public List<User> getAllUsers() {

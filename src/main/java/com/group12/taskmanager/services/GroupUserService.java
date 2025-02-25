@@ -10,11 +10,22 @@ import java.util.List;
 
 @Service
 public class GroupUserService {
+    private static GroupUserService instance;
     private final List<Group_User> GROUP_USERS = new ArrayList<>();
-    private final GroupService GROUP_SERVICE = new GroupService();
-    private final UserService USER_SERVICE =  new UserService();
+    private final GroupService GROUP_SERVICE = GroupService.getInstance();
+    private final UserService USER_SERVICE =  UserService.getInstance();
 
-    public GroupUserService() {
+    private GroupUserService() {
+    }
+    public static GroupUserService getInstance() {
+        if (instance == null) {
+            synchronized (GroupUserService.class) {
+                if (instance == null) {
+                    instance = new GroupUserService();
+                }
+            }
+        }
+        return instance;
     }
 
     public void addEntry(Group group, User user) {
