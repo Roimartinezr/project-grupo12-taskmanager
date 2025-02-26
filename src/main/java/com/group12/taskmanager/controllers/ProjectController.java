@@ -191,4 +191,22 @@ public class ProjectController {
         return ResponseEntity.ok(Collections.singletonMap("message", "Tarea actualizada correctamente"));
     }
 
+
+    @DeleteMapping("/project/{id}/delete_project")
+    public ResponseEntity<?> deleteProject(@PathVariable int id) {
+        Project project = PROJECT_SERVICE.findById(id);
+        if (project == null) {
+            return ResponseEntity.status(404).body(Collections.singletonMap("error", "Proyecto no encontrado"));
+        }
+
+        PROJECT_SERVICE.removeProject(id);
+
+        boolean removed = PROJECT_SERVICE.findById(id) == null;
+        if (removed) {
+            return ResponseEntity.ok(Collections.singletonMap("message", "Proyecto eliminado correctamente"));
+        } else {
+            return ResponseEntity.status(500).body(Collections.singletonMap("error", "Error al eliminar el proyecto"));
+        }
+    }
+
 }

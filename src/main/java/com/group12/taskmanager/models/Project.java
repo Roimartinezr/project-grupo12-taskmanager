@@ -2,6 +2,7 @@ package com.group12.taskmanager.models;
 
 import com.group12.taskmanager.services.TaskService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Project {
@@ -59,6 +60,14 @@ public class Project {
             }
         }
         TASKSERVICE.removeTask(taskID);
+    }
+
+    public void remove() {
+        // Eliminar todas las tareas asociadas a este proyecto
+        for (Task task : new ArrayList<>(tasks)) { // Copia para evitar ConcurrentModificationException
+            TASKSERVICE.removeTask(task.getId());
+        }
+        tasks.clear(); // Limpiar las tareas del proyecto
     }
 
 }

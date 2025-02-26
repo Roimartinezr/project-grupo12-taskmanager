@@ -8,23 +8,39 @@
 </head>
 <body>
 <h1>Proyectos</h1>
+
 <ul>
     {{#projects}}
-        <li><a href="/project/{{id}}"><b>{{name}}</b></a></li>
+        <li class="task-item" data-projectid="{{id}}">
+            <div class="project-content">
+                <a href="/project/{{id}}"><b>{{name}}</b></a>
+                <button class="btnMoreOptions" data-projectid="{{id}}">
+                    <img src="/img/menu.png" alt="Más opciones" style="width:16px; height:16px;">
+                </button>
+            </div>
+
+            <!-- Modal de opciones -->
+            <div class="modalOptions modal hidden" id="modalOptions-{{id}}">
+                <div class="modal-content">
+                    <h2>{{name}}</h2>
+                    <button class="btnEditProject" data-projectid="{{id}}">Editar Proyecto</button>
+                    <button class="btnDeleteProject" data-projectid="{{id}}">Eliminar Proyecto</button>
+                </div>
+            </div>
+        </li>
     {{/projects}}
+
 </ul>
 
-
-
-<!-- Botón para agregar nueva tarea -->
+<!-- Botón para agregar nuevo proyecto -->
 <button id="btnNewProject">Nuevo Proyecto</button>
 
 <div class="container">
     <a href="/logout" class="logout-btn">Cerrar Sesión</a>
 </div>
 
-<!-- Modal (Formulario) -->
-<div id="modalProject" class="modal">
+<!-- Modal para crear nuevo proyecto -->
+<div id="modalProject" class="modal hidden">
     <div class="modal-content">
         <h2>Nuevo Proyecto</h2>
         <form id="formNewProject" action="/save_project" method="POST">
@@ -35,7 +51,7 @@
     </div>
 </div>
 
-
-<script src="/js/index.js"></script>
+<!-- Asegúrate que este script carga correctamente -->
+<script src="/js/index.js" defer></script>
 </body>
 </html>
