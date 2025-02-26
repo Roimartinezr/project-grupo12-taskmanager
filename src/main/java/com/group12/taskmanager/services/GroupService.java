@@ -41,4 +41,8 @@ public class GroupService {
         }
         return null;
     }
+
+    public boolean removeGroup(int groupId) {
+        return GROUPS.removeIf(group -> group.getId() == groupId);
+    }
 }

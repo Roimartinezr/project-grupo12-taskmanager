@@ -48,11 +48,18 @@ public class ProjectService {
     public List<Project> getProjectsByGroup(Group group) {
         List<Project> list = new ArrayList<>();
         for (Project project : PROJECTS) {
-            if (project.getGroup().getId() == group.getId()) {
+            if (project.getGroup() != null && project.getGroup().getId() == group.getId()) {
                 list.add(project);
             }
         }
         return list;
+    }
+    public void removeProject(int projectId) {
+        Project project = findById(projectId);
+        if (project != null) {
+            project.remove(); // Elimina las tareas asociadas
+            PROJECTS.remove(project); // Elimina el proyecto de la lista
+        }
     }
 
 }

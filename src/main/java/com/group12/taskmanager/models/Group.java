@@ -9,6 +9,7 @@ public class Group {
     private static int globalID = 0;
     private int id;
     private String name;
+    private int ownerID;
     private List<User> users;
     private List<Project> projects;
     private final GroupUserService GROUP_USER_SERVICE = GroupUserService.getInstance();
@@ -18,10 +19,10 @@ public class Group {
         Group.globalID++;
         this.id = globalID;
         this.name = name;
+        this.ownerID = firstUser.getId();
         this.users = GROUP_USER_SERVICE.getGroupUsers(this.id);
         this.projects = PROJECT_SERVICE.getProjectsByGroup(this);
         users.add(firstUser);
-        GROUP_USER_SERVICE.addEntry(this, firstUser);
     }
 
     public int getId() {
@@ -36,6 +37,13 @@ public class Group {
     }
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getOwnerID() {
+        return ownerID;
+    }
+    public boolean isOwner(int userID) {
+        return ownerID == userID || userID == 1;
     }
 
     public List<User> getUsers() {
