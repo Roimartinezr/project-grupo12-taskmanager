@@ -21,7 +21,6 @@ public class Group {
         this.users = GROUP_USER_SERVICE.getGroupUsers(this.id);
         this.projects = PROJECT_SERVICE.getProjectsByGroup(this);
         users.add(firstUser);
-        GROUP_USER_SERVICE.addEntry(this, firstUser);
     }
 
     public int getId() {

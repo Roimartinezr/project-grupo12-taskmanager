@@ -43,10 +43,18 @@
 <div id="user-options" class="modalOptions modal hidden">
     <div class="modal-content">
         <h2>{{user.name}}</h2>
-        <button class="btnManageGroups">Gestionar grupos</button>
-        <button class="btnEditUser">Editar datos</button>
-        <button class="btnLogout"><a href="/logout">Cerrar sesión</a></button>
-        <button class="btnDeleteAccount">Borrar cuenta</button>
+        <button class="btnManageGroups">
+            <a href="/user_groups">Gestionar grupos</a>
+        </button>
+        <button class="btnEditUser">
+            <a href="/edit_user">Editar datos</a>
+        </button>
+        <button class="btnLogout">
+            <a href="/logout">Cerrar sesión</a>
+        </button>
+        <button class="btnDeleteAccount">
+            <a href="/delete_account">Borrar cuenta</a>
+        </button>
     </div>
 </div>
 

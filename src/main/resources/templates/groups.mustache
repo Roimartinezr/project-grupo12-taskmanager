@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="/css/index.css">
+        <title>Grupos</title>
+    </head>
+    <body>
+        <h1>Mis Grupos</h1>
+
+        <ul>
+            {{#groups}}
+                <li class="group-item" data-groupid="{{id}}">
+                    <div class="group-content">
+                        <a href="/group/{{id}}"><b>{{name}}</b></a>
+                        <button class="btnMoreOptions" data-groupid="{{id}}">
+                            <img src="/img/menu.png" alt="Más opciones" style="width:16px; height:16px;">
+                        </button>
+                    </div>
+
+                    <!-- Modal de opciones -->
+                    <div class="modalOptions modal hidden" id="modalOptions-{{id}}">
+                        <div class="modal-content">
+                            <h2>{{name}}</h2>
+                            <button class="btnLeaveGroup" data-groupid="{{id}}">Salir del Grupo</button>
+                            <button class="btnEditGroup" data-groupid="{{id}}">Editar Grupo</button>
+                        </div>
+                    </div>
+                </li>
+            {{/groups}}
+        </ul>
+
+        <!-- Botón para crear nuevo grupo -->
+        <button id="btnNewGroup">Nuevo Grupo</button>
+
+        <!-- Modal para crear nuevo grupo -->
+        <div id="modalGroup" class="modal hidden">
+            <div class="modal-content">
+                <h2>Nuevo Grupo</h2>
+                <form id="formNewGroup" action="/save_group" method="POST">
+                    <input type="text" id="name" name="name" placeholder="Nombre del grupo" required>
+                    <input type="hidden" name="userId" value="{{user.id}}">
+                    <button type="submit">Guardar</button>
+                </form>
+            </div>
+        </div>
+
+        <script src="/js/group.js" defer></script>
+
+    </body>
+</html>

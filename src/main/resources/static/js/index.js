@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let clickInsideModal = false;
 
     // Función para asignar eventos a los botones de proyectos
-    function asignarEventosBotonesProyectos() {
+    function assignProjectButtonEvents() {
         document.querySelectorAll(".btnMoreOptions").forEach(button => {
             button.removeEventListener("click", handleMoreOptionsClick);
             button.addEventListener("click", handleMoreOptionsClick);
@@ -82,7 +82,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Abrir modal para crear un nuevo proyecto
-    function abrirModalNuevoProyecto() {
+    function openNewProjectModal() {
         currentProjectId = null;
         formNewProject.querySelector("input[name='name']").value = "";
         modalProject.style.display = "flex";
@@ -101,7 +101,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Guardar proyecto (crear o editar)
-    function guardarProyecto(event) {
+    function saveProject(event) {
         event.preventDefault();
 
         const formData = new URLSearchParams();
@@ -127,28 +127,28 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Función para abrir el modal de opciones de usuario
-    function abrirModalUserOptions() {
+    function openUserOptionsModal() {
         userOptionsModal.style.display = "flex"; // Muestra el modal
     }
 
     // Función para cerrar el modal de opciones de usuario al hacer clic fuera
-    function cerrarModalUserOptions(event) {
+    function closeUserOptionsModal(event) {
         if (event.target === userOptionsModal) {
             userOptionsModal.style.display = "none";
         }
     }
 
     // Asignación de eventos
-    function asignarEventos() {
-        btnNewProject.addEventListener("click", abrirModalNuevoProyecto);
-        formNewProject.addEventListener("submit", guardarProyecto);
-        asignarEventosBotonesProyectos();
+    function assignEvents() {
+        btnNewProject.addEventListener("click", openNewProjectModal);
+        formNewProject.addEventListener("submit", saveProject);
+        assignProjectButtonEvents();
 
         if (openUserOptions && userOptionsModal) {
-            openUserOptions.addEventListener("click", abrirModalUserOptions);
-            window.addEventListener("click", cerrarModalUserOptions);
+            openUserOptions.addEventListener("click", openUserOptionsModal);
+            window.addEventListener("click", closeUserOptionsModal);
         }
     }
 
-    asignarEventos();
+    assignEvents();
 });

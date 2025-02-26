@@ -54,4 +54,24 @@ public class GroupUserService {
         return list;
     }
 
+    public void createGroup(String name, int userId) {
+        Group newGroup = new Group(name, USER_SERVICE.findUserById(userId)); // Generar un ID único
+        GROUP_SERVICE.addGroup(newGroup);
+        GROUP_USERS.add(new Group_User(newGroup.getId(), userId)); // Asociar usuario con el grupo
+    }
+
+    public boolean leaveGroup(int userId, int groupId) {
+        return GROUP_USERS.removeIf(entry -> entry.getIdUser() == userId && entry.getIdGroup() == groupId);
+    }
+
+    public boolean updateGroupName(int groupId, String newName) {
+        Group group = GROUP_SERVICE.findGroupById(groupId);
+        if (group != null) {
+            group.setName(newName);
+            return true;
+        }
+        return false;
+    }
+
+
 }

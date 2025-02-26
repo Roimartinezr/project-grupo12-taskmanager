@@ -116,8 +116,9 @@ button:hover {
 }
 /* Asegurar que los enlaces dentro de los botones se vean como texto normal */
 .modalOptions .modal-content button a {
-    color: inherit;  /* Hereda el color del botón */
-    text-decoration: none; /* Elimina el subrayado del enlace */
+    color: inherit;
+    text-decoration: none;
+    display: block;
     width: 100%;
     height: 100%;
     padding: 10px 0;
