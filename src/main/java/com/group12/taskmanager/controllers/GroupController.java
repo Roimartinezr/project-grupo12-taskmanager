@@ -29,6 +29,11 @@ public class GroupController {
         }
 
         List<Group> groups = GROUP_USER_SERVICE.getUserGroups(currentUser.getId());
+        // Añadir propiedad isOwner a cada grupo
+        for (Group group : groups) {
+            model.addAttribute("isOwner", group.isOwner(currentUser.getId()));
+        }
+
         model.addAttribute("groups", groups);
         model.addAttribute("user", currentUser);
 
@@ -82,5 +87,21 @@ public class GroupController {
         }
     }
 
+    @PostMapping("/delete_group/{groupId}")
+    public ResponseEntity<?> deleteGroup(@PathVariable int groupId, HttpSession session) {
+        User currentUser = (User) session.getAttribute("user");
+
+        if (currentUser == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"success\": false, \"message\": \"No autenticado\"}");
+        }
+
+        boolean success = GROUP_USER_SERVICE.deleteGroup(groupId, currentUser.getId());
+
+        if (success) {
+            return ResponseEntity.ok("{\"success\": true}");
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"success\": false, \"message\": \"Error al eliminar el grupo\"}");
+        }
+    }
 
 }

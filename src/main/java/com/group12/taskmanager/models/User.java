@@ -20,7 +20,7 @@ public class User {
         this.email = email;
         this.password = password;
         this.groups = groupUserService.getUserGroups(this.id); // obtener grupos del USR (al ser nuevo debería de ser una lista vacía)
-        Group newGroup = new Group("USER_"+this.id, this);
+        Group newGroup = new Group("USER_"+this.name, this);
         groups.add(newGroup);
         groupUserService.addEntry(newGroup, this); // añade los nuevos registros a sus respectivas tablas + t.relacion
     }

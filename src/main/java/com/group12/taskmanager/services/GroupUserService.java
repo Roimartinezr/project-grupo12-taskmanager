@@ -73,5 +73,13 @@ public class GroupUserService {
         return false;
     }
 
+    public boolean deleteGroup(int groupId, int userId) {
+        Group group = GROUP_SERVICE.findGroupById(groupId);
+        if (group != null && group.getOwnerID() == userId) {
+            GROUP_USERS.removeIf(entry -> entry.getIdGroup() == groupId);
+            return GROUP_SERVICE.removeGroup(groupId);
+        }
+        return false;
+    }
 
 }

@@ -19,6 +19,11 @@ document.addEventListener("DOMContentLoaded", function () {
             button.addEventListener("click", handleLeaveGroup);
         });
 
+        document.querySelectorAll(".btnDeleteGroup").forEach(button => {
+            button.removeEventListener("click", handleDeleteGroup);
+            button.addEventListener("click", handleDeleteGroup);
+        });
+
         document.querySelectorAll(".btnEditGroup").forEach(button => {
             button.removeEventListener("click", handleEditGroup);
             button.addEventListener("click", handleEditGroup);
@@ -32,7 +37,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // Abrir modal con opciones del grupo (Editar/Salir)
+    // Abrir modal con opciones del grupo (Editar/Salir/Eliminar)
     function handleMoreOptionsClick(event) {
         currentGroupId = event.currentTarget.dataset.groupid;
         const groupItem = event.currentTarget.closest(".group-item");
@@ -52,7 +57,7 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        if (confirm("¿Estas seguro de que deseas salir de este grupo?")) {
+        if (confirm("¿Estás seguro de que deseas salir de este grupo?")) {
             fetch(`/leave_group/${groupId}`, {
                 method: "POST",
             })
@@ -62,6 +67,30 @@ document.addEventListener("DOMContentLoaded", function () {
                         location.reload();
                     } else {
                         console.error("Error al salir del grupo");
+                    }
+                })
+                .catch(error => console.error("Error en la petición:", error));
+        }
+    }
+
+    // Eliminar grupo
+    function handleDeleteGroup(event) {
+        const groupId = event.target.dataset.groupid;
+        if (!groupId) {
+            console.error("No se ha seleccionado un grupo para eliminar.");
+            return;
+        }
+
+        if (confirm("¿Estás seguro de que deseas eliminar este grupo? Esta acción es irreversible.")) {
+            fetch(`/delete_group/${groupId}`, {
+                method: "POST",
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        location.reload();
+                    } else {
+                        alert("Error al eliminar el grupo");
                     }
                 })
                 .catch(error => console.error("Error en la petición:", error));
