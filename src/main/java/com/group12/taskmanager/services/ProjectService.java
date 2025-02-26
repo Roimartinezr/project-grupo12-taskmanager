@@ -54,14 +54,12 @@ public class ProjectService {
         }
         return list;
     }
-    public boolean removeProject(int projectId) {
+    public void removeProject(int projectId) {
         Project project = findById(projectId);
         if (project != null) {
             project.remove(); // Elimina las tareas asociadas
             PROJECTS.remove(project); // Elimina el proyecto de la lista
-            return true;
         }
-        return false;
     }
 
 }

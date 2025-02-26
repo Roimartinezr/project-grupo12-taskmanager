@@ -54,12 +54,14 @@ public class Project {
         TASKSERVICE.addTask(newTask);
     }
     public void removeTask(int taskID) {
+        List<Task> updatedTasks = new ArrayList<>();
         for (Task t : tasks) {
-            if (t.getId() == taskID) {
-                tasks.remove(t);
+            if (t.getId() != taskID) {
+                updatedTasks.add(t); // 🔹 Solo agrega las tareas que NO sean la eliminada
             }
         }
-        TASKSERVICE.removeTask(taskID);
+        tasks = updatedTasks; // 🔹 Reemplaza la lista de tareas con la nueva lista
+        TASKSERVICE.removeTask(taskID); // 🔹 Luego, elimina la tarea del servicio
     }
 
     public void remove() {

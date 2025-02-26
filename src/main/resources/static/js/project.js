@@ -62,38 +62,39 @@ document.addEventListener("DOMContentLoaded", function() {
         }
         console.log("Eliminando tarea con ID: " + taskId);
 
-        // Cerrar el modal antes de eliminar
-        const taskItem = event.target.closest(".task-item");
-        const modal = taskItem.querySelector(".modal");
-        if (modal) {
-            modal.style.display = "none"; // Ocultar modal antes de eliminar la tarea
-        }
-
-        // Buscar la tarea correcta
-        if (!taskItem) {
-            console.warn("No se encontró la tarea en el DOM.");
-            return;
-        }
         // Aplicar animación de eliminación
+        const taskItem = event.target.closest(".task-item");
         taskItem.style.transition = "opacity 0.3s ease-out";
         taskItem.style.opacity = "0";
 
         fetch(`/project/${projectID}/delete_task?taskId=${taskId}`, {
             method: "DELETE",
+            headers: {
+                "Content-Type": "application/json"
+            }
         })
-            .then(response => {
-                if (response.ok) {
+            .then(response => response.json())
+            .then(data => {
+                if (data.message) {
                     console.log("Tarea eliminada correctamente");
-
-                    setTimeout(() => {
-                        taskItem.remove(); // Eliminar la tarea del DOM
-                        asignarEventosBotones(); // Reasignar eventos para evitar problemas futuros
-                    }, 300);
+                    document.querySelector(`[data-taskid='${taskId}']`).remove();
+                    actualizarListaTareas(); // 🔹 Llamar función que actualiza la lista de tareas
                 } else {
                     console.error("Error al eliminar la tarea");
                 }
             })
             .catch(error => console.error("Error en la petición:", error));
+    }
+    function actualizarListaTareas() {
+        fetch(`/project/${projectID}`) // 🔹 Obtener las tareas actualizadas del backend
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById("task-list").innerHTML =
+                    new DOMParser().parseFromString(html, "text/html")
+                        .querySelector("#task-list").innerHTML;
+                asignarEventosBotones(); // 🔹 Reasignar eventos
+            })
+            .catch(error => console.error("Error al actualizar la lista de tareas:", error));
     }
 
     function handleEditTask(event) {

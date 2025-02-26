@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", function() {
     // Abrir modal con opciones (Editar/Eliminar)
     function handleMoreOptionsClick(event) {
         currentProjectId = event.currentTarget.dataset.projectid;
-        const projectItem = event.currentTarget.closest(".task-item");
+        const projectItem = event.currentTarget.closest(".project-item");
         const modal = projectItem.querySelector(".modalOptions");
 
         if (modal) {
@@ -50,12 +50,21 @@ document.addEventListener("DOMContentLoaded", function() {
             return;
         }
 
+
+        // Aplicar animación de eliminación
+        const taskItem = event.target.closest(".project-item");
+        taskItem.style.transition = "opacity 0.3s ease-out";
+        taskItem.style.opacity = "0";
+
+
         fetch(`/project/${projectId}/delete_project`, {
             method: "DELETE",
         })
             .then(response => {
                 if (response.ok) {
-                    document.querySelector(`[data-projectid='${projectId}']`).remove();
+                    setTimeout(() => {
+                        document.querySelector(`[data-projectid='${projectId}']`).remove(); // 🔹 Se elimina después del desvanecimiento
+                    }, 300);
                 } else {
                     console.error("Error al eliminar el proyecto");
                 }
@@ -66,7 +75,7 @@ document.addEventListener("DOMContentLoaded", function() {
     // Editar proyecto
     function handleEditProject(event) {
         currentProjectId = event.currentTarget.dataset.projectid;
-        const projectItem = event.currentTarget.closest(".task-item");
+        const projectItem = event.currentTarget.closest(".project-item");
         const projectName = projectItem.querySelector("b").innerText;
         formNewProject.querySelector("input[name='name']").value = projectName;
         modalProject.style.display = "flex";
@@ -95,21 +104,24 @@ document.addEventListener("DOMContentLoaded", function() {
     formNewProject.addEventListener("submit", function(event) {
         event.preventDefault();
 
-        const formData = new FormData(formNewProject);
-        let url = "/projects/save";
+        const formData = new URLSearchParams();
+        formData.append("name", document.getElementById("name").value);
+        formData.append("userId", document.querySelector("input[name='userId']").value);
+        let url = "/save_project";
         let method = "POST";
 
         if (currentProjectId) {
-            url = `/projects/edit`;
+            url = `/project/{id}/edit_project`;
             method = "PUT";
             formData.append("projectId", currentProjectId);
         }
 
         fetch(url, {
             method: method,
-            body: formData
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: formData.toString()
         })
-            .then(response => response.json())
+            .then(response => response.text())
             .then(data => location.reload())
             .catch(error => console.error("Error al guardar/actualizar proyecto:", error));
     });

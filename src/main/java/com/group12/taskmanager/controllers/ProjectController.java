@@ -18,10 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Controller
 public class ProjectController {
@@ -135,9 +132,14 @@ public class ProjectController {
     @DeleteMapping("/project/{id}/delete_task")
     public ResponseEntity<?> deleteTask(@PathVariable int id, @RequestParam int taskId) {
         Project currentProject = PROJECT_SERVICE.findById(id);
+        if (currentProject == null) {
+            return ResponseEntity.status(404).body(Collections.singletonMap("error", "Proyecto no encontrado"));
+        }
         currentProject.removeTask(taskId);
 
-        boolean removed = TASK_SERVICE.findTaskById(taskId) == null;
+        // 🔹 Forzar actualización de la lista de tareas
+        List<Task> updatedTasks = TASK_SERVICE.getProjectTasks(currentProject);
+        boolean removed = updatedTasks.stream().noneMatch(t -> t.getId() == taskId);
 
         if (removed) {
             return ResponseEntity.ok(Collections.singletonMap("message", "Tarea eliminada correctamente"));
