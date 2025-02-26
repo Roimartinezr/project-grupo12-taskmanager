@@ -32,7 +32,7 @@
     cursor: pointer;
 }
 /* Botón de Cerrar Sesión */
-.logout-btn {
+.user-options-btn {
     position: absolute;
     top: 20px;
     right: 20px;
@@ -44,7 +44,7 @@
     font-weight: bold;
 }
 
-.logout-btn:hover {
+.user-options-btn:hover {
     background-color: #003d99;
 }
 
@@ -82,6 +82,13 @@ button:hover {
     display: block;
     width: 100%;
     margin: 10px 0;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007BFF;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
 }
 .btnMoreOptions {
     background-color: #f0f0f0;
@@ -106,6 +113,14 @@ button:hover {
 .btnMoreOptions img {
     width: 12px;
     height: 12px;
+}
+/* Asegurar que los enlaces dentro de los botones se vean como texto normal */
+.modalOptions .modal-content button a {
+    color: inherit;  /* Hereda el color del botón */
+    text-decoration: none; /* Elimina el subrayado del enlace */
+    width: 100%;
+    height: 100%;
+    padding: 10px 0;
 }
 
 

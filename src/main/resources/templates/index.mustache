@@ -36,7 +36,18 @@
 <button id="btnNewProject">Nuevo Proyecto</button>
 
 <div class="container">
-    <a href="/logout" class="logout-btn">Cerrar Sesión</a>
+    <button id="openUserOptions" class="user-options-btn">Mi Cuenta</button>
+</div>
+
+
+<div id="user-options" class="modalOptions modal hidden">
+    <div class="modal-content">
+        <h2>{{user.name}}</h2>
+        <button class="btnManageGroups">Gestionar grupos</button>
+        <button class="btnEditUser">Editar datos</button>
+        <button class="btnLogout"><a href="/logout">Cerrar sesión</a></button>
+        <button class="btnDeleteAccount">Borrar cuenta</button>
+    </div>
 </div>
 
 <!-- Modal para crear nuevo proyecto -->
