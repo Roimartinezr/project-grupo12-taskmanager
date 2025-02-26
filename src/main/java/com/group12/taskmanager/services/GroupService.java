@@ -42,7 +42,11 @@ public class GroupService {
         return null;
     }
 
-    public boolean removeGroup(int groupId) {
-        return GROUPS.removeIf(group -> group.getId() == groupId);
+    public boolean removeGroup(int groupId, String userName) {
+        Group group = findGroupById(groupId);
+        if (group != null && !group.getName().equals("USER_"+userName)) {
+            return GROUPS.removeIf(g -> g.getId() == groupId);
+        }
+        return false;
     }
 }

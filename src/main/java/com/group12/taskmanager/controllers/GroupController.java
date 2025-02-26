@@ -91,11 +91,12 @@ public class GroupController {
     public ResponseEntity<?> deleteGroup(@PathVariable int groupId, HttpSession session) {
         User currentUser = (User) session.getAttribute("user");
 
+
         if (currentUser == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"success\": false, \"message\": \"No autenticado\"}");
         }
 
-        boolean success = GROUP_USER_SERVICE.deleteGroup(groupId, currentUser.getId());
+        boolean success = GROUP_USER_SERVICE.deleteGroup(groupId, currentUser);
 
         if (success) {
             return ResponseEntity.ok("{\"success\": true}");

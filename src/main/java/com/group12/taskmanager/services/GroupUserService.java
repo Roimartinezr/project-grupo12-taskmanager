@@ -73,11 +73,11 @@ public class GroupUserService {
         return false;
     }
 
-    public boolean deleteGroup(int groupId, int userId) {
+    public boolean deleteGroup(int groupId, User user) {
         Group group = GROUP_SERVICE.findGroupById(groupId);
-        if (group != null && group.getOwnerID() == userId) {
+        if (group != null && group.getOwnerID() == user.getId()) {
             GROUP_USERS.removeIf(entry -> entry.getIdGroup() == groupId);
-            return GROUP_SERVICE.removeGroup(groupId);
+            return GROUP_SERVICE.removeGroup(groupId, user.getName());
         }
         return false;
     }
