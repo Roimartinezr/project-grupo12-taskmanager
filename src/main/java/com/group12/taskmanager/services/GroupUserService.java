@@ -43,6 +43,23 @@ public class GroupUserService {
         }
         return list;
     }
+    public boolean removeUserFromGroup(int userId, int groupId, User currentUser) {
+        Group group = GROUP_SERVICE.findGroupById(groupId);
+        if (group == null) {
+            return false; // Grupo no encontrado
+        }
+        // Verificar si el usuario actual es el propietario del grupo
+        if (!group.isOwner(currentUser.getId())) {
+            return false; // No autorizado
+        }
+        if (currentUser.getId() == userId) {
+            return false; // No se puede eliminar a sí mismo tiene que eliminar el proyecto
+        }
+
+        GROUP_USERS.removeIf(entry -> entry.getIdGroup() == groupId && entry.getIdUser() == userId);
+
+        return true;
+    }
 
     public List<Group> getUserGroups(int userID) {
         List<Group> list = new ArrayList<>();
@@ -73,13 +90,33 @@ public class GroupUserService {
         return false;
     }
 
-    public boolean deleteGroup(int groupId, int userId) {
+    public boolean deleteGroup(int groupId, User user) {
         Group group = GROUP_SERVICE.findGroupById(groupId);
-        if (group != null && group.getOwnerID() == userId) {
+        if (group != null && group.getOwnerID() == user.getId()) {
             GROUP_USERS.removeIf(entry -> entry.getIdGroup() == groupId);
-            return GROUP_SERVICE.removeGroup(groupId);
+            return GROUP_SERVICE.removeGroup(groupId, user.getName());
         }
         return false;
     }
 
+    public boolean addUsersToGroup(int groupId, List<Integer> userIds, User currentUser) {
+        Group group = GROUP_SERVICE.findGroupById(groupId);
+        if (group == null) {
+            return false; // El grupo no existe
+        }
+
+        // Verificar si el usuario que intenta añadir es el propietario del grupo
+        if (!group.isOwner(currentUser.getId())) {
+            return false; // No autorizado
+        }
+
+        for (Integer userId : userIds) {
+            User user = USER_SERVICE.findUserById(userId);
+            if (user != null) {
+                GROUP_USERS.add(new Group_User(group.getId(), user.getId())); // Agregar la relación usuario-grupo
+            }
+        }
+
+        return true;
+    }
 }

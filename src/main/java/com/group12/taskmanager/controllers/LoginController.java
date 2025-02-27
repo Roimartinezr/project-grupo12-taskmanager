@@ -2,6 +2,7 @@ package com.group12.taskmanager.controllers;
 
 import com.group12.taskmanager.models.User;
 import com.group12.taskmanager.services.GroupService;
+import com.group12.taskmanager.services.GroupUserService;
 import com.group12.taskmanager.services.TaskService;
 import com.group12.taskmanager.services.UserService;
 import org.springframework.stereotype.Controller;
@@ -18,6 +19,12 @@ public class LoginController {
     public LoginController() {
         USER_SERVICE = UserService.getInstance();
         USER_SERVICE.addUser(new User("admin", "admin@admin.com", "eoHYeHEXe76Jn"));
+        USER_SERVICE.addUser(new User("test", "test@test.com", "eoHYeHEXe5g54"));
+        USER_SERVICE.addUser(new User("Roi", "roi@roi.com", "eoHYeHEXe5g54"));
+        USER_SERVICE.addUser(new User("Roberto", "rob@rob.com", "eoHYeHEXe5g54"));
+
+        GroupUserService.getInstance().createGroup("PRUEBA", 1);
+        GroupUserService.getInstance().addEntry(GroupService.getInstance().findGroupById(5), UserService.getInstance().findUserById(2));
     }
 
     @GetMapping("/")

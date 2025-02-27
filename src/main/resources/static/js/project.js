@@ -126,6 +126,11 @@ document.addEventListener("DOMContentLoaded", function() {
             hiddenImageInput.value = imagePath || ""; // No asigna "" si no hay imagen
         }
 
+        // cerrar modal opciones
+        const modal = taskItem.querySelector(".modalOptions");
+        if (modal) {
+            modal.style.display = "none";
+        }
         // Mostrar el modal
         modalTask.style.display = "flex";
     }

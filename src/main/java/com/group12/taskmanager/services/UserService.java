@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -56,5 +58,20 @@ public class UserService {
         }
         return null;
     }
+
+    public List<User> searchUsersByNameExcludingGroup(String query, int groupId) {
+        if (query == null || query.isBlank()) {
+            return List.of();
+        }
+        String lowerQuery = query.toLowerCase();
+        List<User> groupUsers = GroupUserService.getInstance().getGroupUsers(groupId);
+
+        return USERS.stream()
+                .filter(user -> user.getName().toLowerCase().contains(lowerQuery))
+                .filter(user -> !groupUsers.contains(user)) // Excluir usuarios que ya están en el grupo
+                .distinct()
+                .collect(Collectors.toList());
+    }
+
 
 }
