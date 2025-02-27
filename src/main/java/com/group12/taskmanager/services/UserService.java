@@ -73,5 +73,12 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
+    public boolean deleteUser(int id) {
+        User user = findUserById(id);
+        if (user != null) {
+            return USERS.remove(user); // Elimina el usuario de la lista
+        }
+        return false; // Si no encuentra el usuario, retorna false
+    }
 
 }
