@@ -57,7 +57,11 @@ public class GroupUserService {
             return false; // No se puede eliminar a sí mismo tiene que eliminar el proyecto
         }
 
-        GROUP_USERS.remove(new Group_User(groupId, userId));
+        for (Group_User entry : GROUP_USERS) {
+            if (entry.getIdGroup() == groupId && entry.getIdUser() == userId) {
+                GROUP_USERS.remove(entry);
+            }
+        }
 
         return true;
     }

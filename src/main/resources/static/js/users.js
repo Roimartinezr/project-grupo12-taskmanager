@@ -41,7 +41,6 @@ document.addEventListener("DOMContentLoaded", function () {
         modalSearchUsers.style.display = "flex"
     }
 
-
     function handleMoreOptionsClick(event) {
         currentUserId = event.currentTarget.dataset.userid;
         const userItem = event.currentTarget.closest(".user-item");
@@ -63,14 +62,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (confirm("¿Estás seguro de que deseas eliminar este miembro del grupo?")) {
             fetch(`/delete_member/${userId}?groupId=${groupId}`, {
-                method: "POST",
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                }
             })
                 .then(response => response.json())
                 .then(data => {
-                    if (data.success) {
-                        location.reload();
+                    if (data.message) {
+                        console.log("Miembro eliminado correctamente");
+                        document.querySelector(`[data-userid='${userId}']`).remove();
                     } else {
-                        alert("Error al eliminar el miembro");
+                        console.error("Error al eliminar el miembro");
                     }
                 })
                 .catch(error => console.error("Error en la petición:", error));

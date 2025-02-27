@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 
 @Controller
@@ -123,7 +124,7 @@ public class GroupController {
         return "users";
     }
 
-    @PostMapping("/delete_member/{userId}")
+    @DeleteMapping("/delete_member/{userId}")
     public ResponseEntity<?> deleteMember(@PathVariable int userId, @RequestParam int groupId, HttpSession session) {
         User currentUser = (User) session.getAttribute("user");
         if (currentUser == null) {
@@ -131,10 +132,11 @@ public class GroupController {
         }
 
         boolean success = GROUP_USER_SERVICE.removeUserFromGroup(userId, groupId, currentUser);
+
         if (success) {
-            return ResponseEntity.ok("{\"success\": true}");
+            return ResponseEntity.ok(Collections.singletonMap("message", "Miembro eliminado correctamente"));
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"success\": false, \"message\": \"Error al eliminar el usuario del grupo\"}");
+            return ResponseEntity.status(404).body(Collections.singletonMap("error", "Tarea no encontrada"));
         }
     }
 
