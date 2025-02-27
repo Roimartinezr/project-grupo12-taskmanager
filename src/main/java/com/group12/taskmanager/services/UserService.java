@@ -59,14 +59,17 @@ public class UserService {
         return null;
     }
 
-    public List<User> searchUsersByName(String query) {
+    public List<User> searchUsersByNameExcludingGroup(String query, int groupId) {
         if (query == null || query.isBlank()) {
             return List.of();
         }
         String lowerQuery = query.toLowerCase();
+        List<User> groupUsers = GroupUserService.getInstance().getGroupUsers(groupId);
+
         return USERS.stream()
                 .filter(user -> user.getName().toLowerCase().contains(lowerQuery))
-                .distinct() // Elimina duplicados
+                .filter(user -> !groupUsers.contains(user)) // Excluir usuarios que ya están en el grupo
+                .distinct()
                 .collect(Collectors.toList());
     }
 

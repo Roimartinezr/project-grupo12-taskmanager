@@ -93,12 +93,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function handleSearchUsers() {
         const query = searchUserInput.value.trim();
+        const groupId = parseInt(document.body.dataset.groupid, 10);
         if (query.length < 2) {
             userSearchResults.innerHTML = "";
             return;
         }
 
-        fetch(`/search_users?q=${encodeURIComponent(query)}`)
+        fetch(`/search_users?q=${encodeURIComponent(query)}&groupId=${groupId}`)
             .then(response => response.json())
             .then(users => {
                 userSearchResults.innerHTML = "";

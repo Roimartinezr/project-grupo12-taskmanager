@@ -145,8 +145,8 @@ public class GroupController {
 
     @GetMapping("/search_users")
     @ResponseBody
-    public List<User> searchUsers(@RequestParam String q) {
-        return UserService.getInstance().searchUsersByName(q);
+    public List<User> searchUsers(@RequestParam String q, @RequestParam int groupId) {
+        return UserService.getInstance().searchUsersByNameExcludingGroup(q, groupId);
     }
 
     @PostMapping("/add_members")
