@@ -104,17 +104,30 @@ document.addEventListener("DOMContentLoaded", function () {
                 userSearchResults.innerHTML = "";
                 users.forEach(user => {
                     const li = document.createElement("li");
-                    li.textContent = user.name;
-                    li.dataset.userid = user.id;
-                    li.addEventListener("click", function () {
-                        if (selectedUsers.has(user.id)) {
-                            selectedUsers.delete(user.id);
-                            li.classList.remove("selected");
-                        } else {
+                    li.classList.add("selectable-user");
+
+                    // Crear checkbox
+                    const checkbox = document.createElement("input");
+                    checkbox.type = "checkbox";
+                    checkbox.dataset.userid = user.id;
+                    checkbox.classList.add("user-checkbox");
+
+                    // Etiqueta con nombre del usuario
+                    const label = document.createElement("label");
+                    label.textContent = user.name;
+                    label.setAttribute("for", `user-${user.id}`);
+                    label.style.marginLeft = "8px";
+
+                    checkbox.addEventListener("change", function () {
+                        if (checkbox.checked) {
                             selectedUsers.add(user.id);
-                            li.classList.add("selected");
+                        } else {
+                            selectedUsers.delete(user.id);
                         }
                     });
+
+                    li.appendChild(checkbox);
+                    li.appendChild(label);
                     userSearchResults.appendChild(li);
                 });
             })
@@ -122,21 +135,27 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function handleAddSelectedUsers() {
+        const checkboxes = document.querySelectorAll(".user-checkbox:checked");
+        selectedUsers.clear();
+        checkboxes.forEach(checkbox => selectedUsers.add(parseInt(checkbox.dataset.userid, 10)));
+
         if (selectedUsers.size === 0) {
             alert("No hay usuarios seleccionados.");
             return;
         }
 
-        const groupId = document.body.dataset.groupid;
-        if (!groupId) {
-            console.error("No se encontró el ID del grupo.");
+        const groupId = parseInt(document.body.dataset.groupid, 10);
+        const currentUserId = parseInt(document.body.dataset.userid, 10); // Obtener el ID del usuario autenticado
+
+        if (!groupId || !currentUserId) {
+            console.error("El ID del grupo o del usuario no es válido.");
             return;
         }
 
         fetch("/add_members", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ groupId, userIds: Array.from(selectedUsers) })
+            body: JSON.stringify({ groupId, userIds: Array.from(selectedUsers), currentUserId })
         })
             .then(response => response.json())
             .then(data => {
@@ -148,6 +167,7 @@ document.addEventListener("DOMContentLoaded", function () {
             })
             .catch(error => console.error("Error en la petición:", error));
     }
+
 
     function assignEvents() {
         btnNewMember.addEventListener("click", function () {

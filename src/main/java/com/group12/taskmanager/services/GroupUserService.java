@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class GroupUserService {
@@ -57,11 +56,7 @@ public class GroupUserService {
             return false; // No se puede eliminar a sí mismo tiene que eliminar el proyecto
         }
 
-        for (Group_User entry : GROUP_USERS) {
-            if (entry.getIdGroup() == groupId && entry.getIdUser() == userId) {
-                GROUP_USERS.remove(entry);
-            }
-        }
+        GROUP_USERS.removeIf(entry -> entry.getIdGroup() == groupId && entry.getIdUser() == userId);
 
         return true;
     }
@@ -104,4 +99,24 @@ public class GroupUserService {
         return false;
     }
 
+    public boolean addUsersToGroup(int groupId, List<Integer> userIds, User currentUser) {
+        Group group = GROUP_SERVICE.findGroupById(groupId);
+        if (group == null) {
+            return false; // El grupo no existe
+        }
+
+        // Verificar si el usuario que intenta añadir es el propietario del grupo
+        if (!group.isOwner(currentUser.getId())) {
+            return false; // No autorizado
+        }
+
+        for (Integer userId : userIds) {
+            User user = USER_SERVICE.findUserById(userId);
+            if (user != null) {
+                GROUP_USERS.add(new Group_User(group.getId(), user.getId())); // Agregar la relación usuario-grupo
+            }
+        }
+
+        return true;
+    }
 }

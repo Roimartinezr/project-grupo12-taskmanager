@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -56,5 +58,17 @@ public class UserService {
         }
         return null;
     }
+
+    public List<User> searchUsersByName(String query) {
+        if (query == null || query.isBlank()) {
+            return List.of();
+        }
+        String lowerQuery = query.toLowerCase();
+        return USERS.stream()
+                .filter(user -> user.getName().toLowerCase().contains(lowerQuery))
+                .distinct() // Elimina duplicados
+                .collect(Collectors.toList());
+    }
+
 
 }

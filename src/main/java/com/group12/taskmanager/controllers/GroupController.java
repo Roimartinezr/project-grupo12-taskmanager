@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class GroupController {
@@ -111,6 +112,8 @@ public class GroupController {
         }
     }
 
+
+
     @GetMapping("/manage_members/{groupId}")
     public String getManageMembers(@PathVariable int groupId, Model model, HttpSession session) {
         Group currentGroup = GROUP_SERVICE.findGroupById(groupId);
@@ -137,6 +140,41 @@ public class GroupController {
             return ResponseEntity.ok(Collections.singletonMap("message", "Miembro eliminado correctamente"));
         } else {
             return ResponseEntity.status(404).body(Collections.singletonMap("error", "Tarea no encontrada"));
+        }
+    }
+
+    @GetMapping("/search_users")
+    @ResponseBody
+    public List<User> searchUsers(@RequestParam String q) {
+        return UserService.getInstance().searchUsersByName(q);
+    }
+
+    @PostMapping("/add_members")
+    public ResponseEntity<?> addMembersToGroup(@RequestBody Map<String, Object> payload) {
+        try {
+            // Obtener el userId del frontend en lugar de la sesión
+            int currentUserId = Integer.parseInt(payload.get("currentUserId").toString());
+            User currentUser = UserService.getInstance().findUserById(currentUserId);
+
+            if (currentUser == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Collections.singletonMap("message", "Usuario no encontrado"));
+            }
+
+            int groupId = Integer.parseInt(payload.get("groupId").toString());
+
+            List<Integer> userIds = ((List<?>) payload.get("userIds")).stream()
+                    .map(id -> Integer.parseInt(id.toString()))
+                    .toList();
+
+            boolean success = GROUP_USER_SERVICE.addUsersToGroup(groupId, userIds, currentUser);
+
+            if (success) {
+                return ResponseEntity.ok(Collections.singletonMap("success", true));
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Collections.singletonMap("message", "Error al agregar usuarios al grupo"));
+            }
+        } catch (NumberFormatException | ClassCastException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Collections.singletonMap("message", "Formato inválido en los datos enviados"));
         }
     }
 

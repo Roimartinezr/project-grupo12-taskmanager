@@ -1,5 +1,6 @@
 package com.group12.taskmanager.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.group12.taskmanager.services.GroupUserService;
 
 import java.util.List;
@@ -10,6 +11,7 @@ public class User {
     private String name;
     private String email;
     private String password;
+    @JsonIgnore
     private List<Group> groups;
     GroupUserService groupUserService = GroupUserService.getInstance();
 
