@@ -15,6 +15,9 @@ public class Group {
     private final GroupUserService GROUP_USER_SERVICE = GroupUserService.getInstance();
     private final ProjectService PROJECT_SERVICE = ProjectService.getInstance();
 
+    private boolean isOwner;
+    private boolean isPersonal;
+
     public Group(String name, User firstUser) {
         Group.globalID++;
         this.id = globalID;
@@ -44,6 +47,13 @@ public class Group {
     }
     public boolean isOwner(int userID) {
         return ownerID == userID || userID == 1;
+    }
+
+    public void setIsOwner(boolean isOwner) {
+        this.isOwner = isOwner;
+    }
+    public void setIsPersonal(boolean isPersonal) {
+        this.isPersonal = isPersonal;
     }
 
     public List<User> getUsers() {

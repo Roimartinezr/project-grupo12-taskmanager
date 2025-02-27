@@ -31,7 +31,8 @@ public class GroupController {
         List<Group> groups = GROUP_USER_SERVICE.getUserGroups(currentUser.getId());
         // Añadir propiedad isOwner a cada grupo
         for (Group group : groups) {
-            model.addAttribute("isOwner", group.isOwner(currentUser.getId()));
+            group.setIsOwner(group.isOwner(currentUser.getId()));
+            group.setIsPersonal(group.getName().equals("USER_" + currentUser.getName()));
         }
 
         model.addAttribute("groups", groups);
