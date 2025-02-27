@@ -7,7 +7,7 @@
     <title>Usuarios</title>
 </head>
 <body>
-<h1>Usuarios del Grupo</h1>
+<h1>Miembros de {{currentGroup.name}}</h1>
 
 <ul>
     {{#users}}
@@ -33,8 +33,16 @@
 <!-- Botón para añadir nuevo usuario -->
 <button id="btnNewMember">Añadir nuevo miembro</button>
 
+<!-- Modal para buscar y agregar usuarios -->
+<div id="modalSearchUsers" class="modal hidden">
+    <div class="modal-content">
+        <h2>Buscar usuarios</h2>
+        <input type="text" id="searchUserInput" placeholder="Buscar usuario...">
+        <ul id="userSearchResults"></ul>
+        <button id="btnAddSelectedUsers">Añadir seleccionados</button>
+    </div>
+</div>
 
 <script src="/js/users.js" defer></script>
-
 </body>
 </html>

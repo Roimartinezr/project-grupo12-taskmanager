@@ -4,6 +4,7 @@ import com.group12.taskmanager.models.Group;
 import com.group12.taskmanager.models.User;
 import com.group12.taskmanager.services.GroupService;
 import com.group12.taskmanager.services.GroupUserService;
+import com.group12.taskmanager.services.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
