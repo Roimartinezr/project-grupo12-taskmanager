@@ -24,6 +24,11 @@ document.addEventListener("DOMContentLoaded", function () {
             button.addEventListener("click", handleDeleteGroup);
         });
 
+        document.querySelectorAll(".btnManageMembers").forEach(button => {
+            button.removeEventListener("click", handleManageMembers);
+            button.addEventListener("click", handleManageMembers);
+        });
+
         document.querySelectorAll(".btnEditGroup").forEach(button => {
             button.removeEventListener("click", handleEditGroup);
             button.addEventListener("click", handleEditGroup);
@@ -97,15 +102,29 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+    // Gestionar miembros
+    function handleManageMembers(event) {
+        const groupId = event.target.dataset.groupid;
+        if (!groupId) {
+            console.error("No se ha seleccionado un grupo.");
+            return;
+        }
+        window.location.href = `/manage_members/${groupId}`;
+    }
+
     // Editar grupo
     function handleEditGroup(event) {
         currentGroupId = event.currentTarget.dataset.groupid;
         const groupItem = event.currentTarget.closest(".group-item");
-        const groupName = groupItem.querySelector("b").innerText;
-
-        inputGroupName.value = groupName; // Mostrar nombre actual en el input
+        inputGroupName.value = groupItem.querySelector("b").innerText; // Mostrar nombre actual en el input
         modalTitle.innerText = "Cambiar Nombre"; // Cambiar título del modal
         modalGroup.style.display = "flex";
+
+        const modal = groupItem.querySelector(".modalOptions");
+        if (modal) {
+            modal.classList.add("hidden");
+            modal.style.display = "none";
+        }
     }
 
     // Abrir modal para crear un nuevo grupo
