@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/project.css">
+    <title>Proyecto</title>
+</head>
+<body>
+    <h1>Lista de Tareas</h1>
+
+    <ul id="task-list">
+        {{#tasks}}
+            <li class="task-item" data-taskid="{{id}}">
+                <div class="task-content">
+                    <b>{{title}}</b>: {{description}}
+                    <button class="btnMoreOptions" data-taskid="{{id}}">
+                        <img src="/img/menu.png" alt="Más opciones" style="width:16px; height:16px;">
+                    </button>
+                </div>
+
+                {{#imagePath}}
+                    <div class="task-image" style="background-image: url('{{{imagePath}}}');"></div>
+                {{/imagePath}}
+
+                <div class="modalOptions modal">
+                    <div class="modal-content">
+                        <h2>{{title}}</h2>
+                        <button class="btnDeleteTask" data-taskid="{{id}}">Eliminar Tarea</button>
+                        <button class="btnEditTask" data-taskid="{{id}}">Editar Tarea</button>
+                    </div>
+                </div>
+            </li>
+        {{/tasks}}
+    </ul>
+
+
+    <button id="btnNewTask">Nueva Tarea</button>
+
+    <div id="modalTask" class="modal">
+        <div class="modal-content">
+            <h2>Nueva Tarea</h2>
+            <form id="formNewTask" enctype="multipart/form-data">
+                <label>
+                    <input type="text" name="title" placeholder="Título" required>
+                </label>
+                <label>
+                    <textarea name="description" placeholder="Descripción" required></textarea>
+                </label>
+                <label>
+                    <input type="file" name="image">
+                </label>
+                <button type="submit">Guardar</button>
+            </form>
+        </div>
+    </div>
+    <div id="project-info" data-projectid="{{idproject}}"></div>
+    <script src="/js/project.js"></script>
+</body>
+</html>

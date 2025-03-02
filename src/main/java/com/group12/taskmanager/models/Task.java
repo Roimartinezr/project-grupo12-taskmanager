@@ -5,24 +5,18 @@ public class Task {
     private int id;
     private String title;
     private String description;
-    private Proyecto proyecto; // Relación con un proyecto
+    private int projectID; // Relación con un proyecto
+    private String imagePath;
 
-    public Task() {}
-
-    public Task(String title, String description, Proyecto proyecto) {
+    public Task(String title, String description, int projectID, String imagePath) {
         Task.globalID = Task.globalID + 1;
         this.id = Task.globalID;
         this.title = title;
         this.description = description;
-        this.proyecto = proyecto;
+        this.projectID = projectID;
+        this.imagePath = imagePath;
     }
 
-    public Task(String title, String description) {
-        Task.globalID = Task.globalID + 1;
-        this.id = Task.globalID;
-        this.title = title;
-        this.description = description;
-    }
 
     public int getId() {
         return id;
@@ -48,11 +42,19 @@ public class Task {
         this.description = description;
     }
 
-    public Proyecto getProyecto() {
-        return proyecto;
+    public int getProjectID() {
+        return projectID;
     }
 
-    public void setProyecto(Proyecto proyecto) {
-        this.proyecto = proyecto;
+    public void setProjectID(int projectID) {
+        this.projectID = projectID;
+    }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 }
