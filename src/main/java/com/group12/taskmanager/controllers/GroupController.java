@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -180,6 +181,7 @@ public class GroupController {
         }
     }
     // Página para editar el usuario
+    // Página para mostrar el formulario de edición
     @GetMapping("/edit_user")
     public String showEditUserPage(HttpSession session, Model model) {
         User currentUser = (User) session.getAttribute("user");
@@ -187,42 +189,57 @@ public class GroupController {
             return "redirect:/login";
         }
         model.addAttribute("user", currentUser);
-        return "edit_user"; // Asegúrate de tener una plantilla edit_user.mustache
+        return "edit_user";
     }
 
-    // Borrar cuenta y redirigir a login
-    @PostMapping("/delete_account")
-    public String deleteAccount(HttpSession session, Model model) {
-        User currentUser = (User) session.getAttribute("user");
+    // Actualizar el usuario (nombre, correo, contraseña)
 
-        if (currentUser != null) {
-            boolean success = userService.deleteUser(currentUser.getId());
-            if (success) {
-                session.invalidate(); // Cierra la sesión actual
-                return "redirect:/logout"; // Redirige tras eliminar la cuenta
-            } else {
-                model.addAttribute("error", "No se pudo eliminar la cuenta. Inténtalo de nuevo.");
-                return "edit_user"; // Vuelve a la página de edición con el mensaje de error
+
+
+    // Borrar cuenta y redirigir a login
+    @DeleteMapping("/delete_user/{userId}")
+    public String deleteUser(@PathVariable int userId, HttpSession session) {
+        User currentUser = (User) session.getAttribute("user");
+        if (currentUser == null) {
+            return "redirect:/error";        }
+
+        List<User> users = UserService.getInstance().getAllUsers();
+        boolean userDeleted = false;
+
+        // Buscar y eliminar el usuario por su ID
+        Iterator<User> iterator = users.iterator();
+        while (iterator.hasNext()) {
+            User user = iterator.next();
+            if (user.getId() == userId) {
+                iterator.remove(); // Eliminar el usuario de la lista
+                userDeleted = true;
+                break;
             }
         }
 
-        return "redirect:/login"; // Si no hay sesión activa, redirige a login
+        if (userDeleted) {
+            if (currentUser.getId() == userId) {
+                session.invalidate(); // Cierra sesión si el usuario se eliminó a sí mismo
+            }
+            return "redirect:/";
+        } else {
+            return "redirect:/error";        }
     }
 
-
-
     @PostMapping("/update_user")
-    public String updateUser(
-            @RequestParam String name,
-            @RequestParam String email,
-            HttpSession session
-    ) {
+    public String updateUser(@RequestParam String name, @RequestParam String email, @RequestParam String password, HttpSession session) {
         User currentUser = (User) session.getAttribute("user");
         if (currentUser != null) {
             currentUser.setName(name);
             currentUser.setEmail(email);
+            currentUser.setPassword(password);
         }
         return "redirect:/"; // Redirige a la página principal o donde quieras
     }
 }
+
+
+
+
+
 

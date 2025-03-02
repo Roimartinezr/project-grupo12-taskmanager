@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -16,6 +15,7 @@ public class UserService {
     private UserService() {
         USERS = new ArrayList<>();
     }
+
     public static UserService getInstance() {
         if (instance == null) {
             synchronized (UserService.class) {
@@ -30,8 +30,9 @@ public class UserService {
     public List<User> getAllUsers() {
         return USERS;
     }
+
     public void addUser(User user) {
-            USERS.add(user);
+        USERS.add(user);
     }
 
     public User findUserById(int id) {
@@ -42,6 +43,7 @@ public class UserService {
         }
         return null;
     }
+
     public User findUserByUsername(String userName) {
         for (User user : USERS) {
             if (user.getName().equals(userName)) {
@@ -50,6 +52,7 @@ public class UserService {
         }
         return null;
     }
+
     public User findUserByEmail(String email) {
         for (User user : USERS) {
             if (user.getEmail().equals(email)) {
@@ -73,12 +76,26 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    public boolean deleteUser(int id) {
-        User user = findUserById(id);
-        if (user != null) {
-            return USERS.remove(user); // Elimina el usuario de la lista
+    public boolean deleteUser(int userId, User currentUser) {
+        User userToRemove = findUserById(userId); // Buscar el usuario
+
+        if (userToRemove == null) {
+            System.out.println("No se encontró el usuario con ID: " + userId);
+            return false; // Usuario no encontrado
         }
-        return false; // Si no encuentra el usuario, retorna false
+
+        // Verificar que el usuario actual está intentando eliminar su propia cuenta
+        if (currentUser.getId() != userId) {
+            System.out.println("No autorizado para eliminar esta cuenta.");
+            return false; // No puede eliminar otras cuentas
+        }
+
+        // Eliminar al usuario de la base de datos
+        USERS.remove(userToRemove);
+        System.out.println("Cuenta eliminada correctamente: " + userId);
+
+        return true;
     }
+
 
 }
