@@ -61,5 +61,14 @@ public class ProjectService {
             PROJECTS.remove(project); // Elimina el proyecto de la lista
         }
     }
-
+    public void updateProject(Project updatedProject) {
+        for (int i = 0; i < PROJECTS.size(); i++) {
+            if (PROJECTS.get(i).getId() == updatedProject.getId()) {
+                PROJECTS.set(i, updatedProject);
+                System.out.println("✅ Proyecto actualizado en la lista: " + updatedProject.getName());
+                return;
+            }
+        }
+        System.out.println("❌ No se encontró el proyecto en la lista.");
+    }
 }

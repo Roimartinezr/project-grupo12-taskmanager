@@ -210,5 +210,16 @@ public class ProjectController {
             return ResponseEntity.status(500).body(Collections.singletonMap("error", "Error al eliminar el proyecto"));
         }
     }
+    @PutMapping("/project/{id}/edit_project")
+    public ResponseEntity<?> editProject(@PathVariable int id, @RequestParam String name) {
+        Project project = PROJECT_SERVICE.findById(id);
+        if (project == null) {
+            return ResponseEntity.status(404).body(Collections.singletonMap("error", "Proyecto no encontrado"));
+        }
 
+        project.setName(name); // 🔹 Actualiza el nombre en la instancia del proyecto
+        PROJECT_SERVICE.updateProject(project); // 🔹 Guarda el cambio en la base de datos
+
+        return ResponseEntity.ok(Collections.singletonMap("success", true));
+    }
 }
