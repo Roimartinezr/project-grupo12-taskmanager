@@ -1,14 +1,45 @@
-/* Estilo general del cuerpo */
+/* Estilo general */
 body {
     margin: 0;
     padding: 0;
     height: 100vh;
     display: flex;
+    font-family: 'Arial', sans-serif;
+    background: url('../img/minimalist_background_unique.jpg') no-repeat center center fixed;
+    background-size: cover;
+}
+
+/* División de la pantalla en dos mitades */
+.split {
+    width: 50%;
+    height: 100vh;
+    display: flex;
     justify-content: center;
     align-items: center;
-    background: url('../img/fondo.jpg') no-repeat center center fixed;
-    background-size: cover;
-    font-family: 'Arial', sans-serif;
+    text-align: center;
+}
+
+/* Mitad izquierda - Logo */
+.left {
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+}
+
+/* Mitad derecha - Formulario */
+.right {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Estilo del título con efecto 3D */
+.title-3d {
+    font-size: 4rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-shadow: 3px 3px 0px #007bff,
+    6px 6px 0px #0056b3,
+    9px 9px 0px #002f7f;
 }
 
 /* Contenedor del formulario */
@@ -37,7 +68,7 @@ h1 {
 }
 
 /* Formularios */
-.login-form {
+.login-form, .register-form {
     display: flex;
     flex-direction: column;
     gap: 15px;
@@ -69,4 +100,20 @@ button {
 
 button:hover {
     background-color: #0056b3;
+}
+
+/* Enlace de registro */
+.register-link {
+    margin-top: 15px;
+    color: white;
+}
+
+.register-link a {
+    color: #ffcc00;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.register-link a:hover {
+    text-decoration: underline;
 }

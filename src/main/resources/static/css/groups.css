@@ -3,7 +3,7 @@ body {
     margin: 0;
     padding: 0;
     font-family: 'Arial', sans-serif;
-    background: url('../img/fondo_pagina_web_resized.jpg') no-repeat center center fixed;
+    background: url('../img/background_resized.jpg') no-repeat center center fixed;
     background-size: cover;
 }
 
@@ -15,7 +15,7 @@ h1 {
     margin-top: 20px;
 }
 
-/* Lista de proyectos */
+/* Lista de grupos */
 ul {
     list-style: none;
     padding: 0;
@@ -23,8 +23,8 @@ ul {
     margin: 20px auto;
 }
 
-/* Estilo de cada proyecto */
-.project-item {
+/* Estilo de cada grupo */
+.group-item {
     background: rgba(77, 116, 255, 0.9);
     padding: 15px;
     border-radius: 10px;
@@ -35,18 +35,17 @@ ul {
     align-items: center;
 }
 
-/* Alinear contenido del proyecto en fila */
-.project-content {
+/* Alinear contenido del grupo en fila */
+.group-content {
     display: flex;
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    gap: 10px; /* Espaciado entre texto y botón */
+    gap: 10px;
 }
 
-/* Nombre del proyecto estilizado */
-.project-content a {
-    text-decoration: none;
+/* Nombre del grupo estilizado */
+.group-content b {
     font-size: 1.5em;
     font-weight: bold;
     font-family: 'Poppins', sans-serif;
@@ -55,16 +54,10 @@ ul {
     padding: 10px 15px;
     border-radius: 8px;
     display: inline-block;
-    transition: background 0.3s, color 0.3s;
-    flex-grow: 1; /* Permite que el texto ocupe el espacio disponible */
+    flex-grow: 1;
 }
 
-.project-content a:hover {
-    background-color: rgba(255, 255, 255, 0.4);
-    color: #e0e0e0;
-}
-
-/* Botón de más opciones (tres puntos) */
+/* Botón de más opciones */
 .btnMoreOptions {
     background-color: rgba(255, 255, 255, 0.2);
     border: none;
@@ -76,7 +69,7 @@ ul {
     justify-content: center;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    flex-shrink: 0; /* Evita que el botón cambie de tamaño */
+    flex-shrink: 0;
 }
 
 .btnMoreOptions:hover {
@@ -122,30 +115,29 @@ ul {
     cursor: pointer;
 }
 
-/* Botón de Cerrar Sesión */
-.user-options-btn {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    background-color: #4d74ff;
+/* Botón de Nuevo Grupo */
+#btnNewGroup {
+    display: block;
+    margin: 20px auto;
+    padding: 15px 30px;
+    font-size: 1.2em;
+    background-color: #28a745;
     color: white;
-    padding: 10px 20px;
-    text-decoration: none;
+    border: none;
     border-radius: 5px;
-    font-weight: bold;
+    cursor: pointer;
 }
 
-.user-options-btn:hover {
-    background-color: #003d99;
+#btnNewGroup:hover {
+    background-color: #218838;
 }
 
-/* Formulario */
+/* Formulario de nuevo grupo */
 form {
     display: flex;
     flex-direction: column;
 }
 
-/* Input de texto */
 input {
     width: 90%;
     padding: 10px;
@@ -156,7 +148,6 @@ input {
     font-size: 16px;
 }
 
-/* Botones */
 button {
     padding: 10px;
     background-color: #007BFF;
@@ -184,7 +175,6 @@ button:hover {
     cursor: pointer;
 }
 
-/* Asegurar que los enlaces dentro de los botones se vean como texto normal */
 .modalOptions .modal-content button a {
     color: inherit;
     text-decoration: none;
@@ -192,38 +182,4 @@ button:hover {
     width: 100%;
     height: 100%;
     padding: 10px 0;
-}
-
-/* Estilos de los usuarios seleccionables */
-.selectable-user {
-    display: flex;
-    align-items: center;
-    padding: 8px;
-    border-bottom: 1px solid #ccc;
-}
-
-.selectable-user:hover {
-    background-color: #f0f0f0;
-}
-
-/* Checkbox de usuario */
-.user-checkbox {
-    transform: scale(1.2);
-}
-
-/* Centrar el botón de Nuevo Proyecto */
-#btnNewProject {
-    display: block;
-    margin: 20px auto;
-    padding: 15px 30px;
-    font-size: 1.2em;
-    background-color: #28a745;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-#btnNewProject:hover {
-    background-color: #218838;
 }
