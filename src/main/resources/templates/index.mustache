@@ -43,21 +43,25 @@
 <div id="user-options" class="modalOptions modal hidden">
     <div class="modal-content">
         <h2>{{user.name}}</h2>
-        <button class="btnManageGroups">
-            <a href="/user_groups">Gestionar grupos</a>
-        </button>
         <button class="btnEditUser">
             <a href="/edit_user">Editar datos</a>
         </button>
         <button class="btnLogout">
             <a href="/logout">Cerrar sesión</a>
         </button>
-        <button class="btnDeleteAccount">
-            <a href="/delete_account">Borrar cuenta</a>
-        </button>
+        <form id="deleteAccountForm" action="/delete_user/{{user.id}}" method="POST">
+            <input type="hidden" name="_method" value="DELETE">
+            <button type="submit">Eliminar cuenta</button>
+        </form>
+
+
+
     </div>
 </div>
 
+<button class="btnManageGroups">
+    <a href="/user_groups">Gestionar grupos</a>
+</button>
 <!-- Modal para crear nuevo proyecto -->
 <div id="modalProject" class="modal hidden">
     <div class="modal-content">
@@ -74,3 +78,7 @@
 <script src="/js/index.js" defer></script>
 </body>
 </html>
+
+
+
+
