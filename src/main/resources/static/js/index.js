@@ -111,7 +111,7 @@ document.addEventListener("DOMContentLoaded", function () {
         let method = "POST";
 
         if (currentProjectId) {
-            url = `/project/{id}/edit_project`;
+            url = `/project/${currentProjectId}/edit_project`;
             method = "PUT";
             formData.append("projectId", currentProjectId);
         }
