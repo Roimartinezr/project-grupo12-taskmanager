@@ -1,6 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
 
-/* Estilo general del cuerpo */
 body {
     margin: 0;
     padding: 0;
@@ -48,7 +47,6 @@ ul {
     cursor: pointer;
 }
 
-/* Estilos para las tareas en formato de cuadrícula tipo rejilla */
 #task-list {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -83,7 +81,7 @@ ul {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    color: black; /* Cambia el color de la letra a negro */
+    color: black;
 }
 
 .task-title {

@@ -57,8 +57,8 @@ public class ProjectService {
     public void removeProject(int projectId) {
         Project project = findById(projectId);
         if (project != null) {
-            project.remove(); // Elimina las tareas asociadas
-            PROJECTS.remove(project); // Elimina el proyecto de la lista
+            project.remove();
+            PROJECTS.remove(project);
         }
     }
     public void updateProject(Project updatedProject) {
