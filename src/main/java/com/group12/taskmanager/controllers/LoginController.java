@@ -32,7 +32,7 @@ public class LoginController {
         if (session.getAttribute("user") != null) {
             return "redirect:/projects"; // Redirige a la lista de proyectos si ya está autenticado
         }
-        return "login"; // Renderiza login.mustache
+        return "login"; // Uses the login.mustache
     }
 
     @PostMapping("/login")
@@ -46,7 +46,7 @@ public class LoginController {
             return "redirect:/projects"; // Redirige a proyectos
         }
         model.addAttribute("error", "Usuario o contraseña incorrectos");
-        return "login"; // Muestra el login con el mensaje de error
+        return "login"; // Shows the login with the error message
     }
 
 
