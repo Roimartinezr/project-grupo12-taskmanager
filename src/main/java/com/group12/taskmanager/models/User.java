@@ -25,12 +25,7 @@ public class User {
     @Column(name = "PASSWD", nullable = false, length = 100)
     private String password;
 
-    @ManyToMany
-    @JoinTable(
-            name = "group_user",
-            joinColumns = @JoinColumn(name = "user_ID"),
-            inverseJoinColumns = @JoinColumn(name = "group_ID")
-    )
+    @ManyToMany(mappedBy = "users")
     private List<Group> groups = new ArrayList<>();
 
     public User() {

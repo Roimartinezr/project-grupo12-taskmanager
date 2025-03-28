@@ -47,9 +47,7 @@ public class GroupController {
         User currentUser = (User) session.getAttribute("user");
         if (currentUser == null) return "redirect:/login";
 
-        Group g = groupService.createGroup(name, currentUser);
-        g.getUsers().add(currentUser);
-        currentUser.getGroups().add(g);
+        groupService.createGroup(name, currentUser);
         return "redirect:/user_groups";
     }
 
@@ -62,10 +60,11 @@ public class GroupController {
         if (group == null || group.getOwner().getId().equals(currentUser.getId()))
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"success\": false, \"message\": \"No se puede salir del grupo\"}");
 
-        group.getUsers().remove(currentUser);
-        currentUser.getGroups().remove(group);
-        groupService.addGroup(group);
-        userService.addUser(currentUser);
+        groupService.removeUserFromGroup(group, currentUser);
+
+        // Actualizar lista de grupos del usuario en sesión
+        currentUser.getGroups().removeIf(g -> g.getId().equals(groupId));
+        session.setAttribute("user", currentUser);
 
         return ResponseEntity.ok("{\"success\": true}");
     }
@@ -101,7 +100,7 @@ public class GroupController {
         return "users";
     }
 
-    @DeleteMapping("/delete_member/{userId}")
+    @PostMapping("/delete_member/{userId}")
     public ResponseEntity<?> deleteMember(@PathVariable int userId, @RequestParam int groupId, HttpSession session) {
         User currentUser = (User) session.getAttribute("user");
         if (currentUser == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"success\": false, \"message\": \"No autenticado\"}");
@@ -149,11 +148,10 @@ public class GroupController {
                 if (user != null && !group.getUsers().contains(user)) {
                     group.getUsers().add(user);
                     user.getGroups().add(group);
-                    userService.addUser(user);
                 }
             }
-
             groupService.addGroup(group);
+
             return ResponseEntity.ok(Collections.singletonMap("success", true));
 
         } catch (Exception e) {

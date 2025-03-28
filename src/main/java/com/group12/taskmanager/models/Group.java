@@ -20,7 +20,12 @@ public class Group {
     @JoinColumn(name = "OWNER", nullable = false)
     private User owner;
 
-    @ManyToMany(mappedBy = "groups")
+    @ManyToMany
+    @JoinTable(
+            name = "group_user",
+            joinColumns = @JoinColumn(name = "group_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
     private List<User> users = new ArrayList<>();
 
     @Transient
@@ -60,10 +65,6 @@ public class Group {
         this.owner = owner;
     }
 
-    public boolean isOwner() {
-        return isOwner;
-    }
-
     public void setIsOwner(boolean isOwner) {
         this.isOwner = isOwner;
     }
@@ -80,11 +81,12 @@ public class Group {
         return users;
     }
 
-    public void setUsers(List<User> users) {
-        this.users = users;
-    }
-
     public void addUser(User user) {
         this.users.add(user);
     }
+    public void removeUser(User user) {
+        this.users.remove(user);
+        user.getGroups().remove(this); // <- sincroniza el lado inverso
+    }
+
 }

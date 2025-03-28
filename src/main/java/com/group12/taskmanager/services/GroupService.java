@@ -5,6 +5,7 @@ import com.group12.taskmanager.models.User;
 import com.group12.taskmanager.repositories.GroupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,22 +24,15 @@ public class GroupService {
         groupRepository.save(group);
     }
 
-    public Group findGroupById(int id) {
-        return groupRepository.findById(id).orElse(null);
-    }
-
-    public boolean removeGroup(int groupId, String userName) {
-        Group group = findGroupById(groupId);
-        if (group != null && !group.getName().equals("USER_" + userName)) {
-            groupRepository.delete(group);
-            return true;
-        }
-        return false;
+    public Group findGroupById(int groupId) {
+        return groupRepository.findByIdWithUsers(groupId);
     }
 
     public Group createGroup(String name, User owner) {
         Group newGroup = new Group(name, owner);
         newGroup.getUsers().add(owner);
+        owner.getGroups().add(newGroup);
+        addGroup(newGroup);
         return groupRepository.save(newGroup);
     }
 
@@ -61,4 +55,11 @@ public class GroupService {
         }
         return false;
     }
+
+    @Transactional
+    public void removeUserFromGroup(Group group, User user) {
+        group.getUsers().remove(user); // sincroniza memoria
+        groupRepository.deleteUserFromGroup(group.getId(), user.getId()); // elimina en BBDD
+    }
+
 }

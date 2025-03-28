@@ -38,32 +38,17 @@ public class LoginController {
             userService.addUser(u4);
 
             // Crear grupos personales automáticamente y asociarlos
-            Group group1 = groupService.createGroup("USER_" + u1.getName(), u1);
-            group1.getUsers().add(u1);
-            u1.getGroups().add(group1);
-            Group group2 = groupService.createGroup("USER_" + u2.getName(), u2);
-            group2.getUsers().add(u2);
-            u2.getGroups().add(group2);
-            Group group3 = groupService.createGroup("USER_" + u3.getName(), u3);
-            group3.getUsers().add(u3);
-            u3.getGroups().add(group3);
-            Group group4 = groupService.createGroup("USER_" + u4.getName(), u4);
-            group4.getUsers().add(u4);
-            u4.getGroups().add(group4);
+            groupService.createGroup("USER_" + u1.getName(), u1);
+            groupService.createGroup("USER_" + u2.getName(), u2);
+            groupService.createGroup("USER_" + u3.getName(), u3);
+            groupService.createGroup("USER_" + u4.getName(), u4);
 
             // Crear grupo de prueba
             Group g = groupService.createGroup("PRUEBA", u1);
             g.getUsers().add(u2); // Asociar u2 al grupo de prueba
             u2.getGroups().add(g); // Asociar el grupo de prueba a u2
-
             // Persistir grupo de prueba y sus relaciones
             groupService.addGroup(g);
-
-            // Asegurarse de que los usuarios tengan sus grupos
-            userService.addUser(u2);  // Guardar usuario u2 después de asociarlo a un grupo
-            userService.addUser(u1);
-            userService.addUser(u3);
-            userService.addUser(u4);
         }
     }
 
