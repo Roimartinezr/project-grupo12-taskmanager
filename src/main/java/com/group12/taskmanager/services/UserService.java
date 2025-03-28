@@ -1,99 +1,73 @@
 package com.group12.taskmanager.services;
 
+import com.group12.taskmanager.models.Group;
 import com.group12.taskmanager.models.User;
+import com.group12.taskmanager.repositories.UserRepository;
+import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class UserService {
-    private static UserService instance; // Única instancia
-    private final List<User> USERS;
 
-    private UserService() {
-        USERS = new ArrayList<>();
-    }
-
-    public static UserService getInstance() {
-        if (instance == null) {
-            synchronized (UserService.class) {
-                if (instance == null) {
-                    instance = new UserService();
-                }
-            }
-        }
-        return instance;
-    }
+    @Autowired
+    private UserRepository userRepository;
 
     public List<User> getAllUsers() {
-        return USERS;
+        return userRepository.findAll();
     }
 
+    @Transactional
     public void addUser(User user) {
-        USERS.add(user);
+        userRepository.save(user); // 👈 primero se guarda el usuario
+        for (Group group : user.getGroups()) {
+            group.getUsers().add(user); // asegúrate de que esta relación sea bidireccional
+        }
     }
 
     public User findUserById(int id) {
-        for (User user : USERS) {
-            if (user.getId() == id) {
-                return user;
-            }
-        }
-        return null;
+        return userRepository.findById(id).orElse(null);
     }
 
     public User findUserByUsername(String userName) {
-        for (User user : USERS) {
-            if (user.getName().equals(userName)) {
-                return user;
-            }
-        }
-        return null;
+        return userRepository.findByName(userName);
     }
 
     public User findUserByEmail(String email) {
-        for (User user : USERS) {
-            if (user.getEmail().equals(email)) {
-                return user;
-            }
-        }
-        return null;
+        return userRepository.findByEmail(email);
     }
 
-    public List<User> searchUsersByNameExcludingGroup(String query, int groupId) {
+    public List<User> searchUsersByNameExcludingGroup(String query, Group group) {
         if (query == null || query.isBlank()) {
             return List.of();
         }
         String lowerQuery = query.toLowerCase();
-        List<User> groupUsers = GroupUserService.getInstance().getGroupUsers(groupId);
+        List<User> groupUsers = group.getUsers();
 
-        return USERS.stream()
+        return userRepository.findAll().stream()
                 .filter(user -> user.getName().toLowerCase().contains(lowerQuery))
-                .filter(user -> !groupUsers.contains(user)) // Excluir usuarios que ya están en el grupo
+                .filter(user -> !groupUsers.contains(user))
                 .distinct()
                 .collect(Collectors.toList());
     }
 
     public boolean deleteUser(int userId, User currentUser) {
-        User userToRemove = findUserById(userId); // Find the user
-
-        if (userToRemove == null) {
-            System.out.println("User with ID not found: " + userId);
-            return false; // User not found
-        }
-
-        // Check that the current user is trying to delete their own account
         if (currentUser.getId() != userId) {
             System.out.println("Not authorized to delete this account.");
-            return false; // Cannot delete other accounts
+            return false;
         }
 
-        // Remove the user from the database
-        USERS.remove(userToRemove);
-        System.out.println("Account successfully deleted: " + userId);
+        if (userRepository.existsById(userId)) {
+            userRepository.deleteById(userId);
+            System.out.println("Account successfully deleted: " + userId);
+            return true;
+        }
 
-        return true;
+        System.out.println("User with ID not found: " + userId);
+        return false;
     }
 }

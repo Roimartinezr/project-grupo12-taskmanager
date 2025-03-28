@@ -3,9 +3,9 @@ package com.group12.taskmanager.controllers;
 import com.group12.taskmanager.models.Group;
 import com.group12.taskmanager.models.User;
 import com.group12.taskmanager.services.GroupService;
-import com.group12.taskmanager.services.GroupUserService;
 import com.group12.taskmanager.services.UserService;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -19,211 +19,163 @@ import java.util.Map;
 
 @Controller
 public class GroupController {
-    private final GroupUserService GROUP_USER_SERVICE;
-    private final GroupService GROUP_SERVICE;
-    private final UserService userService;
 
-    public GroupController(UserService userService) {
-        this.GROUP_USER_SERVICE = GroupUserService.getInstance();
-        this.GROUP_SERVICE = GroupService.getInstance();
-        this.userService = userService;
-    }
+    @Autowired
+    private GroupService groupService;
+
+    @Autowired
+    private UserService userService;
 
     @GetMapping("/user_groups")
     public String getUserGroups(Model model, HttpSession session) {
         User currentUser = (User) session.getAttribute("user");
+        if (currentUser == null) return "redirect:/login";
 
-        if (currentUser == null) {
-            return "redirect:/login"; // Redirigir si no hay sesión activa
-        }
-
-        List<Group> groups = GROUP_USER_SERVICE.getUserGroups(currentUser.getId());
-        // Añadir propiedad isOwner a cada grupo
+        List<Group> groups = currentUser.getGroups();
         for (Group group : groups) {
-            group.setIsOwner(group.isOwner(currentUser.getId()));
+            group.setIsOwner(group.getOwner().getId().equals(currentUser.getId()));
             group.setIsPersonal(group.getName().equals("USER_" + currentUser.getName()));
         }
 
         model.addAttribute("groups", groups);
         model.addAttribute("user", currentUser);
-
         return "groups";
     }
 
     @PostMapping("/save_group")
     public String createGroup(@RequestParam String name, HttpSession session) {
         User currentUser = (User) session.getAttribute("user");
+        if (currentUser == null) return "redirect:/login";
 
-        if (currentUser == null) {
-            return "redirect:/login";
-        }
-
-        GROUP_USER_SERVICE.createGroup(name, currentUser.getId());
-
+        groupService.createGroup(name, currentUser);
         return "redirect:/user_groups";
     }
 
     @PostMapping("/leave_group/{groupId}")
     public ResponseEntity<?> leaveGroup(@PathVariable int groupId, HttpSession session) {
         User currentUser = (User) session.getAttribute("user");
+        if (currentUser == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"success\": false, \"message\": \"No autenticado\"}");
 
-        if (currentUser == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"success\": false, \"message\": \"No autenticado\"}");
-        }
+        Group group = groupService.findGroupById(groupId);
+        if (group == null || group.getOwner().getId().equals(currentUser.getId()))
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"success\": false, \"message\": \"No se puede salir del grupo\"}");
 
-        boolean success = GROUP_USER_SERVICE.leaveGroup(currentUser.getId(), groupId);
+        group.getUsers().remove(currentUser);
+        currentUser.getGroups().remove(group);
+        groupService.addGroup(group);
+        userService.addUser(currentUser);
 
-        if (success) {
-            return ResponseEntity.ok("{\"success\": true}");
-        } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"success\": false, \"message\": \"Error al salir del grupo\"}");
-        }
+        return ResponseEntity.ok("{\"success\": true}");
     }
 
     @PostMapping("/edit_group/{groupId}")
     public ResponseEntity<?> editGroup(@PathVariable int groupId, @RequestParam String name, HttpSession session) {
         User currentUser = (User) session.getAttribute("user");
+        if (currentUser == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"success\": false, \"message\": \"No autenticado\"}");
 
-        if (currentUser == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"success\": false, \"message\": \"No autenticado\"}");
-        }
-
-        boolean success = GROUP_USER_SERVICE.updateGroupName(groupId, name);
-
-        if (success) {
-            return ResponseEntity.ok("{\"success\": true}");
-        } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"success\": false, \"message\": \"Error al actualizar el grupo\"}");
-        }
+        boolean success = groupService.updateGroupName(groupId, name);
+        return success ? ResponseEntity.ok("{\"success\": true}")
+                : ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"success\": false, \"message\": \"Error al actualizar el grupo\"}");
     }
 
     @PostMapping("/delete_group/{groupId}")
     public ResponseEntity<?> deleteGroup(@PathVariable int groupId, HttpSession session) {
         User currentUser = (User) session.getAttribute("user");
+        if (currentUser == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"success\": false, \"message\": \"No autenticado\"}");
 
-
-        if (currentUser == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"success\": false, \"message\": \"No autenticado\"}");
-        }
-
-        boolean success = GROUP_USER_SERVICE.deleteGroup(groupId, currentUser);
-
-        if (success) {
-            return ResponseEntity.ok("{\"success\": true}");
-        } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"success\": false, \"message\": \"Error al eliminar el grupo\"}");
-        }
+        boolean success = groupService.deleteGroup(groupId, currentUser);
+        return success ? ResponseEntity.ok("{\"success\": true}")
+                : ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"success\": false, \"message\": \"Error al eliminar el grupo\"}");
     }
-
-
 
     @GetMapping("/manage_members/{groupId}")
     public String getManageMembers(@PathVariable int groupId, Model model, HttpSession session) {
-        Group currentGroup = GROUP_SERVICE.findGroupById(groupId);
+        Group group = groupService.findGroupById(groupId);
         User currentUser = (User) session.getAttribute("user");
-        List<User> groupUsers = GROUP_USER_SERVICE.getGroupUsers(groupId);
 
-        model.addAttribute("users", groupUsers);
+        model.addAttribute("users", group.getUsers());
         model.addAttribute("currentUser", currentUser);
-        model.addAttribute("currentGroup", currentGroup);
-
+        model.addAttribute("currentGroup", group);
         return "users";
     }
 
     @DeleteMapping("/delete_member/{userId}")
     public ResponseEntity<?> deleteMember(@PathVariable int userId, @RequestParam int groupId, HttpSession session) {
         User currentUser = (User) session.getAttribute("user");
-        if (currentUser == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"success\": false, \"message\": \"No autenticado\"}");
+        if (currentUser == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"success\": false, \"message\": \"No autenticado\"}");
+
+        Group group = groupService.findGroupById(groupId);
+        User user = userService.findUserById(userId);
+
+        if (group == null || user == null || !group.getOwner().getId().equals(currentUser.getId())) {
+            return ResponseEntity.status(404).body(Collections.singletonMap("error", "No autorizado o grupo/usuario no encontrado"));
         }
 
-        boolean success = GROUP_USER_SERVICE.removeUserFromGroup(userId, groupId, currentUser);
+        group.getUsers().remove(user);
+        user.getGroups().remove(group);
+        groupService.addGroup(group);
+        userService.addUser(user);
 
-        if (success) {
-            return ResponseEntity.ok(Collections.singletonMap("message", "Miembro eliminado correctamente"));
-        } else {
-            return ResponseEntity.status(404).body(Collections.singletonMap("error", "Tarea no encontrada"));
-        }
+        return ResponseEntity.ok(Collections.singletonMap("message", "Miembro eliminado correctamente"));
     }
 
     @GetMapping("/search_users")
     @ResponseBody
     public List<User> searchUsers(@RequestParam String q, @RequestParam int groupId) {
-        return UserService.getInstance().searchUsersByNameExcludingGroup(q, groupId);
+        Group group = groupService.findGroupById(groupId);
+        return userService.searchUsersByNameExcludingGroup(q, group);
     }
 
     @PostMapping("/add_members")
     public ResponseEntity<?> addMembersToGroup(@RequestBody Map<String, Object> payload) {
         try {
-            // Obtener el userId del frontend en lugar de la sesión
             int currentUserId = Integer.parseInt(payload.get("currentUserId").toString());
-            User currentUser = UserService.getInstance().findUserById(currentUserId);
-
-            if (currentUser == null) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Collections.singletonMap("message", "Usuario no encontrado"));
-            }
-
+            User currentUser = userService.findUserById(currentUserId);
             int groupId = Integer.parseInt(payload.get("groupId").toString());
+            Group group = groupService.findGroupById(groupId);
+
+            if (currentUser == null || group == null || !group.getOwner().getId().equals(currentUser.getId())) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Collections.singletonMap("message", "No autorizado"));
+            }
 
             List<Integer> userIds = ((List<?>) payload.get("userIds")).stream()
                     .map(id -> Integer.parseInt(id.toString()))
                     .toList();
 
-            boolean success = GROUP_USER_SERVICE.addUsersToGroup(groupId, userIds, currentUser);
-
-            if (success) {
-                return ResponseEntity.ok(Collections.singletonMap("success", true));
-            } else {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Collections.singletonMap("message", "Error al agregar usuarios al grupo"));
+            for (Integer userId : userIds) {
+                User user = userService.findUserById(userId);
+                if (user != null && !group.getUsers().contains(user)) {
+                    group.getUsers().add(user);
+                    user.getGroups().add(group);
+                    userService.addUser(user);
+                }
             }
-        } catch (NumberFormatException | ClassCastException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Collections.singletonMap("message", "Formato inválido en los datos enviados"));
+
+            groupService.addGroup(group);
+            return ResponseEntity.ok(Collections.singletonMap("success", true));
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Collections.singletonMap("message", "Error procesando la solicitud"));
         }
     }
-    // Página para editar el usuario
-    // Página para mostrar el formulario de edición
+
     @GetMapping("/edit_user")
     public String showEditUserPage(HttpSession session, Model model) {
         User currentUser = (User) session.getAttribute("user");
-        if (currentUser == null) {
-            return "redirect:/login";
-        }
+        if (currentUser == null) return "redirect:/login";
+
         model.addAttribute("user", currentUser);
         return "edit_user";
     }
 
-    // Actualizar el usuario (nombre, correo, contraseña)
-
-
-
-    // Borrar cuenta y redirigir a login
     @DeleteMapping("/delete_user/{userId}")
     public String deleteUser(@PathVariable int userId, HttpSession session) {
         User currentUser = (User) session.getAttribute("user");
-        if (currentUser == null) {
-            return "redirect:/error";        }
+        if (currentUser == null) return "redirect:/error";
 
-        List<User> users = UserService.getInstance().getAllUsers();
-        boolean userDeleted = false;
-
-        // Search and check the user by  his ID
-        Iterator<User> iterator = users.iterator();
-        while (iterator.hasNext()) {
-            User user = iterator.next();
-            if (user.getId() == userId) {
-                iterator.remove(); // Eliminar el usuario de la lista
-                userDeleted = true;
-                break;
-            }
-        }
-
-        if (userDeleted) {
-            if (currentUser.getId() == userId) {
-                session.invalidate(); // Cierra sesión si el usuario se eliminó a sí mismo
-            }
-            return "redirect:/";
-        } else {
-            return "redirect:/error";        }
+        boolean deleted = userService.deleteUser(userId, currentUser);
+        if (deleted && currentUser.getId().equals(userId)) session.invalidate();
+        return deleted ? "redirect:/" : "redirect:/error";
     }
 
     @PostMapping("/update_user")
@@ -233,13 +185,8 @@ public class GroupController {
             currentUser.setName(name);
             currentUser.setEmail(email);
             currentUser.setPassword(password);
+            userService.addUser(currentUser);
         }
         return "redirect:/";
     }
 }
-
-
-
-
-
-

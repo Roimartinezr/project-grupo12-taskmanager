@@ -1,36 +1,54 @@
 package com.group12.taskmanager.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.group12.taskmanager.services.GroupUserService;
+import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
+@Entity
+@Table(name = "`USER`") // uso de comillas invertidas por ser palabra reservada
 public class User {
-    private static int globalID = 0;
-    private int id;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID")
+    private Integer id;
+
+    @Column(name = "NAME", nullable = false, unique = true, length = 50)
     private String name;
+
+    @Column(name = "EMAIL", nullable = false, unique = true, length = 100)
     private String email;
-    private String password;
+
     @JsonIgnore
-    private List<Group> groups;
-    GroupUserService groupUserService = GroupUserService.getInstance();
+    @Column(name = "PASSWD", nullable = false, length = 100)
+    private String password;
+
+    @ManyToMany
+    @JoinTable(
+            name = "group_user",
+            joinColumns = @JoinColumn(name = "user_ID"),
+            inverseJoinColumns = @JoinColumn(name = "group_ID")
+    )
+    private List<Group> groups = new ArrayList<>();
+
+    public User() {
+        // Constructor requerido por JPA
+    }
 
     public User(String name, String email, String password) {
-        User.globalID++;
-        this.id = User.globalID;
         this.name = name;
         this.email = email;
         this.password = password;
-        this.groups = groupUserService.getUserGroups(this.id); // get the user's groups (should be an empty list for a new user)
-        Group newGroup = new Group("USER_" + this.name, this);
-        groups.add(newGroup);
-        groupUserService.addEntry(newGroup, this); // adds new records to their respective tables + relationship table
     }
 
-    public int getId() {
+    // Getters y setters
+
+    public Integer getId() {
         return id;
     }
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -58,7 +76,13 @@ public class User {
     public List<Group> getGroups() {
         return groups;
     }
+    public void setGroups(List<Group> groups) {
+        this.groups = groups;
+    }
+
     public void updateGroups(Group group) {
-        this.groups.add(group);
+        if (!groups.contains(group)) {
+            this.groups.add(group);
+        }
     }
 }

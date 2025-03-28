@@ -1,0 +1,11 @@
+package com.group12.taskmanager.repositories;
+
+import com.group12.taskmanager.models.Group;
+import com.group12.taskmanager.models.Project;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
+
+public interface ProjectRepository extends JpaRepository<Project, Integer> {
+    List<Project> findByGroup(Group group);
+}
