@@ -85,6 +85,10 @@ public class GroupController {
         if (currentUser == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"success\": false, \"message\": \"No autenticado\"}");
 
         boolean success = groupService.deleteGroup(groupId, currentUser);
+        // Actualizar lista de grupos del usuario en sesión
+        currentUser.getGroups().removeIf(g -> g.getId().equals(groupId));
+        session.setAttribute("user", currentUser);
+
         return success ? ResponseEntity.ok("{\"success\": true}")
                 : ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"success\": false, \"message\": \"Error al eliminar el grupo\"}");
     }
@@ -98,26 +102,6 @@ public class GroupController {
         model.addAttribute("currentUser", currentUser);
         model.addAttribute("currentGroup", group);
         return "users";
-    }
-
-    @PostMapping("/delete_member/{userId}")
-    public ResponseEntity<?> deleteMember(@PathVariable int userId, @RequestParam int groupId, HttpSession session) {
-        User currentUser = (User) session.getAttribute("user");
-        if (currentUser == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"success\": false, \"message\": \"No autenticado\"}");
-
-        Group group = groupService.findGroupById(groupId);
-        User user = userService.findUserById(userId);
-
-        if (group == null || user == null || !group.getOwner().getId().equals(currentUser.getId())) {
-            return ResponseEntity.status(404).body(Collections.singletonMap("error", "No autorizado o grupo/usuario no encontrado"));
-        }
-
-        group.getUsers().remove(user);
-        user.getGroups().remove(group);
-        groupService.addGroup(group);
-        userService.addUser(user);
-
-        return ResponseEntity.ok(Collections.singletonMap("message", "Miembro eliminado correctamente"));
     }
 
     @GetMapping("/search_users")

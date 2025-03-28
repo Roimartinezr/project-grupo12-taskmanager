@@ -47,6 +47,7 @@ public class GroupService {
         return false;
     }
 
+    @Transactional
     public boolean deleteGroup(int groupId, User currentUser) {
         Group group = findGroupById(groupId);
         if (group != null && group.getOwner().getId().equals(currentUser.getId())) {
