@@ -25,30 +25,48 @@ public class LoginController {
     @PostConstruct
     public void initData() {
         if (userService.findUserByEmail("admin@admin.com") == null) {
+            // Crear usuarios
             User u1 = new User("admin", "admin@admin.com", "eoHYeHEXe76Jn");
             User u2 = new User("test", "test@test.com", "eoHYeHEXe5g54");
             User u3 = new User("Roi", "roi@roi.com", "eoHYeHEXe5g54");
             User u4 = new User("Roberto", "rob@rob.com", "eoHYeHEXe5g54");
 
+            // Guardar usuarios
             userService.addUser(u1);
             userService.addUser(u2);
             userService.addUser(u3);
             userService.addUser(u4);
 
-            // Crear grupos personales automáticamente
-            groupService.createGroup("USER_" + u1.getName(), u1);
-            groupService.createGroup("USER_" + u2.getName(), u2);
-            groupService.createGroup("USER_" + u3.getName(), u3);
-            groupService.createGroup("USER_" + u4.getName(), u4);
+            // Crear grupos personales automáticamente y asociarlos
+            Group group1 = groupService.createGroup("USER_" + u1.getName(), u1);
+            group1.getUsers().add(u1);
+            u1.getGroups().add(group1);
+            Group group2 = groupService.createGroup("USER_" + u2.getName(), u2);
+            group2.getUsers().add(u2);
+            u2.getGroups().add(group2);
+            Group group3 = groupService.createGroup("USER_" + u3.getName(), u3);
+            group3.getUsers().add(u3);
+            u3.getGroups().add(group3);
+            Group group4 = groupService.createGroup("USER_" + u4.getName(), u4);
+            group4.getUsers().add(u4);
+            u4.getGroups().add(group4);
 
-            // Grupo adicional de prueba (ID = 5 se asume por tu código anterior)
+            // Crear grupo de prueba
             Group g = groupService.createGroup("PRUEBA", u1);
-            g.getUsers().add(u2);
-            u2.getGroups().add(g);
-            userService.addUser(u2);
+            g.getUsers().add(u2); // Asociar u2 al grupo de prueba
+            u2.getGroups().add(g); // Asociar el grupo de prueba a u2
+
+            // Persistir grupo de prueba y sus relaciones
             groupService.addGroup(g);
+
+            // Asegurarse de que los usuarios tengan sus grupos
+            userService.addUser(u2);  // Guardar usuario u2 después de asociarlo a un grupo
+            userService.addUser(u1);
+            userService.addUser(u3);
+            userService.addUser(u4);
         }
     }
+
 
     @GetMapping("/")
     public String loginPage(HttpSession session) {
@@ -104,13 +122,27 @@ public class LoginController {
             return "redirect:/";
         }
 
+        // Crear nuevo usuario
         User newUser = new User(new_username, email, new_password);
-        userService.addUser(newUser);
+        userService.addUser(newUser);  // Guardamos el usuario en la tabla 'user'
 
-        // Crear grupo personal
-        groupService.createGroup("USER_" + newUser.getName(), newUser);
+        // Crear grupo personal para el nuevo usuario
+        Group newGroup = groupService.createGroup("USER_" + newUser.getName(), newUser);  // Este grupo ya tiene el usuario asignado
+
+        // Persistir el grupo
+        groupService.addGroup(newGroup);  // Guardamos el grupo en la tabla 'group'
+
+        // Ahora, las relaciones en la tabla 'user_group' se gestionan automáticamente
+        newUser.getGroups().add(newGroup); // Añadir el grupo al usuario
+        newGroup.getUsers().add(newUser);  // Añadir el usuario al grupo
+
+        // Guardar los cambios en el usuario, lo que actualizará la relación
+        userService.addUser(newUser); // Esta llamada actualizará la relación en 'user_group'
 
         model.addAttribute("success_message", "Registro exitoso, inicia sesión");
         return "redirect:/";
     }
+
+
+
 }

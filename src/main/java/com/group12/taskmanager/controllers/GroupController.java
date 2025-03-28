@@ -47,7 +47,9 @@ public class GroupController {
         User currentUser = (User) session.getAttribute("user");
         if (currentUser == null) return "redirect:/login";
 
-        groupService.createGroup(name, currentUser);
+        Group g = groupService.createGroup(name, currentUser);
+        g.getUsers().add(currentUser);
+        currentUser.getGroups().add(g);
         return "redirect:/user_groups";
     }
 

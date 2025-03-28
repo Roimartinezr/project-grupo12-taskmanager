@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,8 +36,10 @@ public class UserService {
         return userRepository.findByName(userName);
     }
 
+    // Actualizar este método para que use la consulta personalizada que recupera los grupos
+    @Transactional
     public User findUserByEmail(String email) {
-        return userRepository.findByEmail(email);
+        return userRepository.findByEmailWithGroups(email); // Usamos el método de repositorio que evita el LazyInitializationException
     }
 
     public List<User> searchUsersByNameExcludingGroup(String query, Group group) {
