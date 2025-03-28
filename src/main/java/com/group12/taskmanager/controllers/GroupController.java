@@ -112,6 +112,26 @@ public class GroupController {
         return "users";
     }
 
+    @DeleteMapping("/delete_member/{userId}")
+    public ResponseEntity<?> deleteMember(@PathVariable int userId, @RequestParam int groupId, HttpSession session) {
+        User currentUser = (User) session.getAttribute("user");
+        if (currentUser == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"success\": false, \"message\": \"No autenticado\"}");
+
+        Group group = groupService.findGroupById(groupId);
+        User user = userService.findUserById(userId);
+
+        if (group == null || user == null || !group.getOwner().getId().equals(currentUser.getId())) {
+            return ResponseEntity.status(404).body(Collections.singletonMap("error", "No autorizado o grupo/usuario no encontrado"));
+        }
+
+        group.getUsers().remove(user);
+        user.getGroups().remove(group);
+        groupService.addGroup(group);
+        userService.addUser(user);
+
+        return ResponseEntity.ok(Collections.singletonMap("message", "Miembro eliminado correctamente"));
+    }
+
     @GetMapping("/search_users")
     @ResponseBody
     public List<User> searchUsers(@RequestParam String q, @RequestParam int groupId) {

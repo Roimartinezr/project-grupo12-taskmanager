@@ -25,6 +25,7 @@ public class User {
     @Column(name = "PASSWD", nullable = false, length = 100)
     private String password;
 
+    @JsonIgnore
     @ManyToMany(mappedBy = "users")
     private List<Group> groups = new ArrayList<>();
 

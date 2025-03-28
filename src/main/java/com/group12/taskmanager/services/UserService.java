@@ -42,19 +42,14 @@ public class UserService {
         return userRepository.findByEmailWithGroups(email); // Usamos el método de repositorio que evita el LazyInitializationException
     }
 
-    public List<User> searchUsersByNameExcludingGroup(String query, Group group) {
-        if (query == null || query.isBlank()) {
-            return List.of();
+    public List<User> searchUsersByNameExcludingGroup(String q, Group group) {
+        if (q == null || q.trim().isEmpty()) {
+            return List.of(); // evita devolver todos los usuarios si no hay búsqueda
         }
-        String lowerQuery = query.toLowerCase();
-        List<User> groupUsers = group.getUsers();
 
-        return userRepository.findAll().stream()
-                .filter(user -> user.getName().toLowerCase().contains(lowerQuery))
-                .filter(user -> !groupUsers.contains(user))
-                .distinct()
-                .collect(Collectors.toList());
+        return userRepository.findByNameStartingWithExcludingGroup(q.trim(), group.getUsers());
     }
+
 
     public boolean deleteUser(int userId, User currentUser) {
         if (currentUser.getId() != userId) {
