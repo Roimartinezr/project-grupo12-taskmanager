@@ -75,6 +75,14 @@ public class GroupController {
         if (currentUser == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"success\": false, \"message\": \"No autenticado\"}");
 
         boolean success = groupService.updateGroupName(groupId, name);
+        // Actualizar nombre del grupo en la sesión del usuario
+        currentUser.getGroups().stream()
+                .filter(g -> g.getId().equals(groupId))
+                .findFirst()
+                .ifPresent(g -> g.setName(name));
+
+        session.setAttribute("user", currentUser);
+
         return success ? ResponseEntity.ok("{\"success\": true}")
                 : ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"success\": false, \"message\": \"Error al actualizar el grupo\"}");
     }
