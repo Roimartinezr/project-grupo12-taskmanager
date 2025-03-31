@@ -223,5 +223,5 @@ input, textarea {
 }
 #btnBack:hover {
     background: #636060;
-    border: black;
+    border: 2px solid black;
 }

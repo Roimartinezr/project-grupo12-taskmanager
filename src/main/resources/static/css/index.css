@@ -232,7 +232,7 @@ button:hover {
 }
 #btnBack:hover {
     background: #636060;
-    border: black;
+    border: 2px solid black;
 }
 #openUserOptions {
     padding: 20px;

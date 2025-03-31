@@ -1,6 +1,7 @@
 package com.group12.taskmanager.services;
 
 import com.group12.taskmanager.models.Group;
+import com.group12.taskmanager.models.Project;
 import com.group12.taskmanager.models.User;
 import com.group12.taskmanager.repositories.GroupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,9 @@ public class GroupService {
 
     @Autowired
     private GroupRepository groupRepository;
+
+    @Autowired
+    private ProjectService projectService;
 
     public void saveGroup(Group group) {
         groupRepository.save(group);
@@ -45,6 +49,9 @@ public class GroupService {
     public boolean deleteGroup(int groupId, User currentUser) {
         Group group = findGroupById(groupId);
         if (group != null && group.getOwner().getId().equals(currentUser.getId())) {
+            for (Project project : projectService.getProjectsByGroup(group)) {
+                projectService.deleteProject(project.getId());
+            }
             groupRepository.delete(group);
             return true;
         }
