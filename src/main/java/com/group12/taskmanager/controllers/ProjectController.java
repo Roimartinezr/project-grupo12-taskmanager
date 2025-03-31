@@ -146,7 +146,7 @@ public class ProjectController {
         return ResponseEntity.ok(Collections.singletonMap("message", "Tarea actualizada correctamente"));
     }
 
-    @DeleteMapping("/project/{id}/delete_project")
+    @PostMapping("/project/{id}/delete_project")
     public ResponseEntity<?> deleteProject(@PathVariable int id) {
         Project project = projectService.findProjectById(id);
         if (project == null)

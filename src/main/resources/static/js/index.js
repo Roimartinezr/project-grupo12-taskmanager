@@ -54,7 +54,7 @@ document.addEventListener("DOMContentLoaded", function () {
         taskItem.style.opacity = "0";
 
         fetch(`/project/${projectId}/delete_project`, {
-            method: "DELETE",
+            method: "POST",
         })
             .then(response => {
                 if (response.ok) {
