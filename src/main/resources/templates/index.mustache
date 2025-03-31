@@ -51,7 +51,7 @@
         </button>
 
         <form id="deleteAccountForm" action="/delete_user/{{user.id}}" method="POST">
-            <button type="submit">Eliminar cuenta</button>
+            <button type="submit" id="deleteAccountBtn">Eliminar cuenta</button>
         </form>
 
         <!-- Botón "Gestionar grupos" ahora está dentro del menú de usuario -->
@@ -66,7 +66,7 @@
     <div class="modal-content">
         <h2>Nuevo Proyecto</h2>
         <form id="formNewProject" action="/save_project" method="POST">
-            <input type="text" id="name" name="name" placeholder="Nombre del proyecto" required>
+            <input type="text" id="name" name="name" placeholder="Nombre del proyecto" autocomplete="off" required>
             {{#multipleGroups}}
                 <select name="groupId" required>
                     {{#ownedGroups}}

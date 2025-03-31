@@ -3,10 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/css/index.css">
+    <link rel="stylesheet" href="/css/members.css">
     <title>Usuarios</title>
 </head>
 <body data-groupid="{{currentGroup.id}}" data-userid="{{currentUser.id}}">
+
+<a href="/user_groups"><button id="btnBack"><img src="/img/arrow_back.png" alt="back" style="width:32px; height:24px;"></button></a>
 <h1>Miembros de {{currentGroup.name}}</h1>
 
 <ul>
@@ -36,7 +38,7 @@
 <div id="modalSearchUsers" class="modal hidden">
     <div class="modal-content">
         <h2>Buscar usuarios</h2>
-        <input type="text" id="searchUserInput" placeholder="Buscar usuario...">
+        <input type="text" id="searchUserInput" placeholder="Buscar usuario..." autocomplete="off">
         <ul id="userSearchResults"></ul>
         <button id="btnAddSelectedUsers">Añadir seleccionados</button>
     </div>

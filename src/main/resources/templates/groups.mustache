@@ -7,6 +7,8 @@
         <title>Grupos</title>
     </head>
     <body>
+
+        <a href="/projects"><button id="btnBack"><img src="/img/arrow_back.png" alt="back" style="width:32px; height:24px;"></button></a>
         <h1>Mis Grupos</h1>
 
         <ul>
@@ -15,7 +17,7 @@
                     <div class="group-content">
                         <b>{{name}}</b>
                         <button class="btnMoreOptions" data-groupid="{{id}}">
-                            <img src="/img/menu.png" alt="Más opciones" style="width:16px; height:16px;">
+                            <img src="/img/menu.png" alt="Más opciones" style="width:32px; height:24px;">
                         </button>
                     </div>
 
@@ -48,7 +50,7 @@
             <div class="modal-content">
                 <h2>Nuevo Grupo</h2>
                 <form id="formNewGroup" action="/save_group" method="POST">
-                    <input type="text" id="name" name="name" placeholder="Nombre del grupo" required>
+                    <input type="text" id="name" name="name" placeholder="Nombre del grupo" autocomplete="off" required>
                     <input type="hidden" name="userId" value="{{user.id}}">
                     <button type="submit">Guardar</button>
                 </form>

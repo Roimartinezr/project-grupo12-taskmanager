@@ -7,6 +7,8 @@
     <title>Proyecto</title>
 </head>
 <body>
+
+    <a href="/projects"><button id="btnBack"><img src="/img/arrow_back.png" alt="back" style="width:32px; height:24px;"></button></a>
     <h1>Lista de Tareas</h1>
 
     <ul id="task-list">
@@ -46,10 +48,10 @@
             <h2>Nueva Tarea</h2>
             <form id="formNewTask" enctype="multipart/form-data">
                 <label>
-                    <input type="text" name="title" placeholder="Título" required>
+                    <input type="text" name="title" placeholder="Título" autocomplete="off" required>
                 </label>
                 <label>
-                    <textarea name="description" placeholder="Descripción" required></textarea>
+                    <textarea name="description" placeholder="Descripción" autocomplete="off" required></textarea>
                 </label>
                 <label>
                     <input type="file" name="image">

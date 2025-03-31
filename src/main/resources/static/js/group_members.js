@@ -60,7 +60,7 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        if (confirm("¿Estás seguro de que deseas eliminar este miembro del grupo?")) {
+        if (confirm("\u00BFEst\u00E1s seguro de que deseas eliminar este miembro del grupo?")) {
             fetch(`/delete_member/${userId}?groupId=${groupId}`, {
                 method: "DELETE",
                 headers: {
@@ -69,11 +69,11 @@ document.addEventListener("DOMContentLoaded", function () {
             })
                 .then(response => response.json())
                 .then(data => {
-                    if (data.message) {
+                    if (data.success) {
                         console.log("Miembro eliminado correctamente");
                         document.querySelector(`[data-userid='${userId}']`).remove();
                     } else {
-                        console.error("Error al eliminar el miembro");
+                        alert(data.message);
                     }
                 })
                 .catch(error => console.error("Error en la petición:", error));

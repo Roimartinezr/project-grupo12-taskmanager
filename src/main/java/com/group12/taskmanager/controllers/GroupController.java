@@ -126,13 +126,18 @@ public class GroupController {
 
         if (group == null || user == null || !group.getOwner().getId().equals(currentUser.getId())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body(Collections.singletonMap("error", "No autorizado o grupo/usuario no encontrado"));
+                    .body(Collections.singletonMap("message", "No autorizado o grupo/usuario no encontrado"));
+        }
+
+        if (currentUser.getId() == userId) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(Collections.singletonMap("message", "No puedes eliminarte si eres el propietario"));
         }
 
         group.getUsers().remove(user);
         groupService.saveGroup(group); // solo guarda el propietario
 
-        return ResponseEntity.ok(Collections.singletonMap("message", "Miembro eliminado correctamente"));
+        return ResponseEntity.ok(Collections.singletonMap("success", true));
     }
 
     @GetMapping("/search_users")

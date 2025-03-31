@@ -117,13 +117,6 @@ public class LoginController {
         // Persistir el grupo
         groupService.saveGroup(newGroup);  // Guardamos el grupo en la tabla 'group'
 
-        // Ahora, las relaciones en la tabla 'user_group' se gestionan automáticamente
-        newUser.getGroups().add(newGroup); // Añadir el grupo al usuario
-        newGroup.getUsers().add(newUser);  // Añadir el usuario al grupo
-
-        // Guardar los cambios en el usuario, lo que actualizará la relación
-        userService.addUser(newUser); // Esta llamada actualizará la relación en 'user_group'
-
         model.addAttribute("success_message", "Registro exitoso, inicia sesión");
         return "redirect:/";
     }

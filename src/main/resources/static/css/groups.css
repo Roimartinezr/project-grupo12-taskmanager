@@ -170,3 +170,18 @@ button:hover {
     height: 100%;
     padding: 10px 0;
 }
+
+#btnBack {
+    background: darkgray;
+    padding: 6px 12px;
+    margin-top: 10px;
+    margin-left: 10px;
+    border: 2px solid white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#btnBack:hover {
+    background: #636060;
+    border: black;
+}

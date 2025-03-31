@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const formNewProject = document.getElementById("formNewProject");
     const openUserOptions = document.getElementById("openUserOptions");
     const userOptionsModal = document.getElementById("user-options");
+    const deleteAccountBtn = document.getElementById("deleteAccountBtn");
     let currentProjectId = null;
     let clickInsideModal = false;
 
@@ -30,6 +31,20 @@ document.addEventListener("DOMContentLoaded", function () {
             modal.addEventListener("mouseup", handleModalMouseUp);
         });
     }
+
+    deleteAccountBtn.addEventListener("click", function(event) {
+        // Prevenir el envío inmediato del formulario
+        event.preventDefault();
+
+        // Mostrar un diálogo de confirmación
+        const confirmation = confirm("\u00BFEst\u00E1s seguro de que quieres eliminar tu cuenta? Esta acci\u00F3n es irreversible.");
+
+        // Si el usuario confirma, enviar el formulario
+        if (confirmation) {
+            // Enviar el formulario
+            document.getElementById("deleteAccountForm").submit();
+        }
+    });
 
     function handleMoreOptionsClick(event) {
         currentProjectId = event.currentTarget.dataset.projectid;
@@ -73,6 +88,10 @@ document.addEventListener("DOMContentLoaded", function () {
         const projectItem = event.currentTarget.closest(".project-item");
         const projectName = projectItem.querySelector("b").innerText;
         formNewProject.querySelector("input[name='name']").value = projectName;
+        document.querySelectorAll(".modalOptions").forEach( modal =>{
+            modal.classList.add("hidden");
+            modal.style.display = "none";
+        });
         modalProject.style.display = "flex";
     }
 

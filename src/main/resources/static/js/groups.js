@@ -68,7 +68,7 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        if (confirm("¿Estás seguro de que deseas salir de este grupo?")) {
+        if (confirm("\u00BFEst\u00E1s seguro de que deseas salir de este grupo?")) {
             fetch(`/leave_group/${groupId}`, {
                 method: "POST",
             })
@@ -91,7 +91,7 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        if (confirm("¿Estás seguro de que deseas eliminar este grupo? Esta acción es irreversible.")) {
+        if (confirm("\u00BFEst\u00E1s seguro de que deseas eliminar este grupo? Esta acci\u00F3n es irreversible.")) {
             fetch(`/delete_group/${groupId}`, {
                 method: "POST",
             })
@@ -215,6 +215,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     modalNewOwner.classList.add("hidden");
                     modalNewOwner.style.display = "none";
                     location.reload();
+                    alert("Propietario cambiado correctamente")
                 } else {
                     alert("Error al cambiar de propietario");
                 }
