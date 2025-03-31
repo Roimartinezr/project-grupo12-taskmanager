@@ -49,8 +49,8 @@
         <button class="btnLogout">
             <a href="/logout">Cerrar sesión</a>
         </button>
+
         <form id="deleteAccountForm" action="/delete_user/{{user.id}}" method="POST">
-            <input type="hidden" name="_method" value="DELETE">
             <button type="submit">Eliminar cuenta</button>
         </form>
 

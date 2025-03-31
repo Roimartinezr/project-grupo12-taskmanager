@@ -2,11 +2,13 @@ package com.group12.taskmanager.services;
 
 import com.group12.taskmanager.models.Group;
 import com.group12.taskmanager.models.User;
+import com.group12.taskmanager.repositories.GroupRepository;
 import com.group12.taskmanager.repositories.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,6 +17,9 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private GroupService groupService;
 
     public List<User> getAllUsers() {
         return userRepository.findAll();
@@ -57,13 +62,34 @@ public class UserService {
             return false;
         }
 
-        if (userRepository.existsById(userId)) {
-            userRepository.deleteById(userId);
-            System.out.println("Account successfully deleted: " + userId);
-            return true;
-        }
+        try {
+            User user = userRepository.findById(userId).orElse(null);
+            if (user == null) return false;
 
-        System.out.println("User with ID not found: " + userId);
-        return false;
+            // Clonamos la lista de grupos para evitar problemas de concurrencia
+            List<Group> userGroups = new ArrayList<>(user.getGroups());
+
+            for (Group group : userGroups) {
+                if (group.getOwner().getId().equals(user.getId())) {
+                    // Si el usuario es propietario: eliminar el grupo completo
+                    groupService.deleteGroup(group.getId(), user); // 👈 usa tu método existente
+                } else {
+                    // Si NO es propietario: eliminar solo su relación con el grupo
+                    group.getUsers().remove(user);
+                    user.getGroups().remove(group);
+                    groupService.addGroup(group); // guardar el grupo actualizado
+                }
+            }
+
+            // Finalmente eliminar al usuario
+            userRepository.delete(user);
+            System.out.println("Usuario y sus grupos eliminados correctamente.");
+            return true;
+
+        } catch (Exception e) {
+            System.out.println("Error al eliminar usuario: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
     }
 }

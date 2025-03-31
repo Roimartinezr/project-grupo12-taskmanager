@@ -13,7 +13,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -109,7 +108,7 @@ public class GroupController {
         model.addAttribute("users", group.getUsers());
         model.addAttribute("currentUser", currentUser);
         model.addAttribute("currentGroup", group);
-        return "users";
+        return "group_members";
     }
 
     @DeleteMapping("/delete_member/{userId}")
@@ -133,7 +132,6 @@ public class GroupController {
 
         return ResponseEntity.ok(Collections.singletonMap("message", "Miembro eliminado correctamente"));
     }
-
 
     @GetMapping("/search_users")
     @ResponseBody
@@ -174,6 +172,9 @@ public class GroupController {
         }
     }
 
+
+
+    
     @GetMapping("/edit_user")
     public String showEditUserPage(HttpSession session, Model model) {
         User currentUser = (User) session.getAttribute("user");
@@ -183,7 +184,7 @@ public class GroupController {
         return "edit_user";
     }
 
-    @DeleteMapping("/delete_user/{userId}")
+    @PostMapping("/delete_user/{userId}")
     public String deleteUser(@PathVariable int userId, HttpSession session) {
         User currentUser = (User) session.getAttribute("user");
         if (currentUser == null) return "redirect:/error";
