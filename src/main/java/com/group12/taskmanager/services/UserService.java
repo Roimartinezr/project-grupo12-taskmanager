@@ -87,7 +87,7 @@ public class UserService {
                     // Si NO es propietario: eliminar solo su relación con el grupo
                     group.getUsers().remove(user);
                     user.getGroups().remove(group);
-                    groupService.addGroup(group); // guardar el grupo actualizado
+                    groupService.saveGroup(group); // guardar el grupo actualizado
                 }
             }
 

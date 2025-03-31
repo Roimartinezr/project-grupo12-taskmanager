@@ -25,9 +25,10 @@
                             <h2>{{name}}</h2>
                             {{^isPersonal}}
                                 {{#isOwner}}
-                                    <button class="btnDeleteGroup" data-groupid="{{id}}">Eliminar Grupo</button>
-                                    <button class="btnManageMembers" data-groupid="{{id}}">Gestionar Miembros</button>
                                     <button class="btnEditGroup" data-groupid="{{id}}">Editar Grupo</button>
+                                    <button class="btnManageMembers" data-groupid="{{id}}">Gestionar Miembros</button>
+                                    <button class="btnChangeOwner" data-groupid="{{id}}">Cambiar Propietario</button>
+                                    <button class="btnDeleteGroup" data-groupid="{{id}}">Eliminar Grupo</button>
                                 {{/isOwner}}
                                 {{^isOwner}}
                                     <button class="btnLeaveGroup" data-groupid="{{id}}">Salir del Grupo</button>
@@ -51,6 +52,16 @@
                     <input type="hidden" name="userId" value="{{user.id}}">
                     <button type="submit">Guardar</button>
                 </form>
+            </div>
+        </div>
+
+        <!-- Modal para buscar y agregar usuarios -->
+        <div id="modalChangeOwner" class="modal hidden">
+            <div class="modal-content">
+                <h2>Cambiar Propietario</h2>
+                <!-- Lista de usuarios en radiobuttons -->
+                <ul id="groupUsersResult"></ul>
+                <button id="btnAddSelectedUser">Añadir seleccionado</button>
             </div>
         </div>
 

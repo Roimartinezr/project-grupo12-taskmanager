@@ -1,13 +1,22 @@
 document.addEventListener("DOMContentLoaded", function () {
     const modalGroup = document.getElementById("modalGroup");
+    const modalNewOwner = document.getElementById("modalChangeOwner")
     const modalTitle = modalGroup.querySelector("h2");
     const btnNewGroup = document.getElementById("btnNewGroup");
     const formNewGroup = document.getElementById("formNewGroup");
     const inputGroupName = formNewGroup.querySelector("input[name='name']");
+    const groupUsersResult =document.getElementById("groupUsersResult");
+    const btnAddSelectedUser = document.getElementById("btnAddSelectedUser");
     let currentGroupId = null;
     let clickInsideModal = false;
+    let newOwner = null;
 
     function assignGroupButtonEvents() {
+        document.querySelectorAll(".btnChangeOwner").forEach(button => {
+            button.removeEventListener("click", openNewOwnerModal);
+            button.addEventListener("click", openNewOwnerModal);
+        });
+
         document.querySelectorAll(".btnMoreOptions").forEach(button => {
             button.removeEventListener("click", handleMoreOptionsClick);
             button.addEventListener("click", handleMoreOptionsClick);
@@ -140,6 +149,80 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+
+    function openNewOwnerModal(event) {
+        currentGroupId = event.target.dataset.groupid;
+        document.querySelectorAll(".modalOptions").forEach( modal => {
+            modal.classList.add("hidden");
+            modal.style.display = "none";
+        });
+        modalNewOwner.classList.remove("hidden");
+        modalNewOwner.style.display = "flex";
+        showGroupMembers();
+    }
+
+    //mostrar miembros del grupo
+    function showGroupMembers() {
+        // Obtener los miembros del grupo desde el servidor
+        fetch(`/group_members?groupId=${currentGroupId}`)
+            .then(res => res.json())
+            .then(users => {
+                groupUsersResult.innerHTML = "";
+                users.forEach(user => {
+                    const li = document.createElement('li');
+                    const radio = document.createElement("input");
+                    radio.type = "radio";
+                    radio.value = user.id;
+                    radio.id = `user-${user.id}`;
+
+                    const label = document.createElement("label");
+                    label.textContent = user.name;
+                    label.setAttribute("for", `user-${user.id}`);
+                    label.style.marginLeft = "8px";
+
+                    radio.addEventListener("change", function ()    {
+                        if (radio.checked) {
+                            newOwner = user.id;
+                        } else {
+                            newOwner = null;
+                        }
+                    });
+
+                    li.appendChild(radio);
+                    li.appendChild(label);
+                    groupUsersResult.appendChild(li);
+                });
+            })
+            .catch(err => {
+                console.error("Error al cargar los miembros:", err);
+            });
+    }
+
+    // Cambiar propietario
+    function handleChangeOwner() {
+        if (newOwner == null) {
+            alert("No hay ningún usuario seleccionado");
+            return;
+        }
+
+        fetch(`/group/${currentGroupId}/change_owner?newOwnerId=${newOwner}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" }
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    modalNewOwner.classList.add("hidden");
+                    modalNewOwner.style.display = "none";
+                    location.reload();
+                } else {
+                    alert("Error al cambiar de propietario");
+                }
+            })
+            .catch(error => console.error("Error en la petición:", error));
+
+    }
+
     // Guardar grupo (crear o editar)
     function saveGroup(event) {
         event.preventDefault();
@@ -169,6 +252,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function assignEvents() {
         btnNewGroup.addEventListener("click", openNewGroupModal);
         formNewGroup.addEventListener("submit", saveGroup);
+        btnAddSelectedUser.addEventListener("click", handleChangeOwner);
         assignGroupButtonEvents();
     }
 

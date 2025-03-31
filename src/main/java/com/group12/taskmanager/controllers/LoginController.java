@@ -48,7 +48,7 @@ public class LoginController {
             g.getUsers().add(u2); // Asociar u2 al grupo de prueba
             u2.getGroups().add(g); // Asociar el grupo de prueba a u2
             // Persistir grupo de prueba y sus relaciones
-            groupService.addGroup(g);
+            groupService.saveGroup(g);
         }
     }
 
@@ -115,7 +115,7 @@ public class LoginController {
         Group newGroup = groupService.createGroup("USER_" + newUser.getName(), newUser);  // Este grupo ya tiene el usuario asignado
 
         // Persistir el grupo
-        groupService.addGroup(newGroup);  // Guardamos el grupo en la tabla 'group'
+        groupService.saveGroup(newGroup);  // Guardamos el grupo en la tabla 'group'
 
         // Ahora, las relaciones en la tabla 'user_group' se gestionan automáticamente
         newUser.getGroups().add(newGroup); // Añadir el grupo al usuario

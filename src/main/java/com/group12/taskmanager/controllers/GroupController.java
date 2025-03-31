@@ -9,8 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Collections;
 import java.util.List;
@@ -128,7 +130,7 @@ public class GroupController {
         }
 
         group.getUsers().remove(user);
-        groupService.addGroup(group); // solo guarda el propietario
+        groupService.saveGroup(group); // solo guarda el propietario
 
         return ResponseEntity.ok(Collections.singletonMap("message", "Miembro eliminado correctamente"));
     }
@@ -163,7 +165,7 @@ public class GroupController {
                     user.getGroups().add(group);
                 }
             }
-            groupService.addGroup(group);
+            groupService.saveGroup(group);
 
             return ResponseEntity.ok(Collections.singletonMap("success", true));
 
@@ -213,5 +215,68 @@ public class GroupController {
             session.setAttribute("user", updatedUser);
         }
         return "redirect:/";
+    }
+
+    @Transactional
+    @PostMapping("/group/{groupId}/change_owner")
+    public ResponseEntity<?> changeGroupOwner(
+            @PathVariable int groupId,
+            @RequestParam int newOwnerId,
+            HttpSession session) {
+
+        User currentUser = (User) session.getAttribute("user");
+        if (currentUser == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Usuario no autenticado");
+        }
+
+        Group group = groupService.findGroupById(groupId);
+        if (group == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Grupo no encontrado");
+        }
+
+        // Verificamos que el usuario actual sea el propietario
+        if (!group.getOwner().getId().equals(currentUser.getId())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("No tienes permisos para cambiar el propietario");
+        }
+
+        User newOwner = userService.findUserById(newOwnerId);
+        if (newOwner == null || !group.getUsers().contains(newOwner)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("El nuevo propietario debe ser un miembro del grupo");
+        }
+
+        // Cambiar propietario
+        group.setOwner(newOwner);
+        groupService.saveGroup(group);
+
+        currentUser.getGroups().stream()
+                .filter(g -> g.getId() == groupId)
+                .findFirst()
+                .ifPresent(g -> {
+                    g.setOwner(newOwner);
+                    g.setIsOwner(g.getOwner().getId() == newOwnerId);
+                        });
+
+        return ResponseEntity.ok(Collections.singletonMap("success", true));
+    }
+
+
+    @GetMapping("/group_members")
+    @ResponseBody
+    public List<User> getGroupMembers(@RequestParam int groupId) {
+        Group group = groupService.findGroupById(groupId);
+        if (group == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Grupo no encontrado");
+        }
+        // Retornamos solo los usuarios que son miembros del grupo
+
+        List<User> users = group.getUsers();
+        for (User user : users) {
+            if (group.getOwner().getId() == user.getId()) {
+                users.remove(user);
+                break;
+            }
+        }
+
+        return users;
     }
 }

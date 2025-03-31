@@ -15,7 +15,7 @@ public class GroupService {
     @Autowired
     private GroupRepository groupRepository;
 
-    public void addGroup(Group group) {
+    public void saveGroup(Group group) {
         groupRepository.save(group);
     }
 
@@ -26,7 +26,7 @@ public class GroupService {
         Group newGroup = new Group(name, owner);
         newGroup.getUsers().add(owner);
         owner.getGroups().add(newGroup);
-        addGroup(newGroup);
+        saveGroup(newGroup);
         return groupRepository.save(newGroup);
     }
 
