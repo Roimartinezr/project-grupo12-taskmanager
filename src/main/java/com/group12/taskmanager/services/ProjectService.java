@@ -2,12 +2,12 @@ package com.group12.taskmanager.services;
 
 import com.group12.taskmanager.models.Group;
 import com.group12.taskmanager.models.Project;
+import com.group12.taskmanager.models.Task;
 import com.group12.taskmanager.repositories.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ProjectService {
@@ -15,44 +15,32 @@ public class ProjectService {
     @Autowired
     private ProjectRepository projectRepository;
 
-    public List<Project> getAllProjects() {
-        return projectRepository.findAll();
-    }
+    @Autowired
+    private TaskService taskService;
 
-    public Project addProject(Project project) {
-        return projectRepository.save(project);
-    }
-
-    public Project createProject(String name, Group group) {
+    public void createProject(String name, Group group) {
         Project project = new Project(name, group);
-        return projectRepository.save(project);
+        projectRepository.save(project);
     }
 
     public Project findProjectById(int id) {
         return projectRepository.findById(id).orElse(null);
     }
 
-    public boolean deleteProject(int id) {
-        if (projectRepository.existsById(id)) {
-            projectRepository.deleteById(id);
-            return true;
+    public void deleteProject(int projectId) {
+        Project project = projectRepository.findById(projectId).orElse(null);
+        // eliminar todas las tareas del proyecto
+        if (project != null) {
+            List<Task> tasks = taskService.getProjectTasks(project);
+            for (Task task : tasks) {
+                taskService.removeTask(task.getId());
+            }
+            projectRepository.delete(project);
         }
-        return false;
     }
 
     public void updateProject(Project project) {
         projectRepository.save(project);
-    }
-
-    public boolean updateProjectName(int id, String newName) {
-        Optional<Project> optionalProject = projectRepository.findById(id);
-        if (optionalProject.isPresent()) {
-            Project project = optionalProject.get();
-            project.setName(newName);
-            projectRepository.save(project);
-            return true;
-        }
-        return false;
     }
 
     public List<Project> getProjectsByGroup(Group group) {

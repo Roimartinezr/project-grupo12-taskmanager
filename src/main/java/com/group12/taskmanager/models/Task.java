@@ -17,23 +17,18 @@ public class Task {
     @Column(name = "DESCRIPTION", length = 700)
     private String description;
 
+    @Lob
+    @Column(name = "image")
+    private byte[] image;
+
     @ManyToOne
     @JoinColumn(name = "PROJECT", nullable = false)
     private Project project;
 
     @Transient
-    private String imagePath; // no está en la BBDD
+    private String imageBase64;
 
     public Task() {}
-
-    public Task(String title, String description, Project project, String imagePath) {
-        this.title = title;
-        this.description = description;
-        this.project = project;
-        this.imagePath = imagePath;
-    }
-
-    // Getters y setters
 
     public Integer getId() {
         return id;
@@ -63,10 +58,9 @@ public class Task {
         this.project = project;
     }
 
-    public String getImagePath() {
-        return imagePath;
-    }
-    public void setImagePath(String imagePath) {
-        this.imagePath = imagePath;
-    }
+    public byte[] getImage() { return image; }
+    public void setImage(byte[] image) { this.image = image; }
+
+    public String getImageBase64() { return imageBase64; }
+    public void setImageBase64(String imageBase64) { this.imageBase64 = imageBase64; }
 }

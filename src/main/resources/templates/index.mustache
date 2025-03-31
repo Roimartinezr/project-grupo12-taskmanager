@@ -49,8 +49,8 @@
         <button class="btnLogout">
             <a href="/logout">Cerrar sesión</a>
         </button>
+
         <form id="deleteAccountForm" action="/delete_user/{{user.id}}" method="POST">
-            <input type="hidden" name="_method" value="DELETE">
             <button type="submit">Eliminar cuenta</button>
         </form>
 
@@ -67,7 +67,18 @@
         <h2>Nuevo Proyecto</h2>
         <form id="formNewProject" action="/save_project" method="POST">
             <input type="text" id="name" name="name" placeholder="Nombre del proyecto" required>
-            <input type="hidden" name="userId" value="{{user.id}}">
+            {{#multipleGroups}}
+                <select name="groupId" required>
+                    {{#ownedGroups}}
+                        <option value="{{id}}">{{name}}</option>
+                    {{/ownedGroups}}
+                </select>
+            {{/multipleGroups}}
+
+            {{^multipleGroups}}
+                <input type="hidden" name="groupId" value="{{singleGroup.id}}">
+            {{/multipleGroups}}
+
             <button type="submit">Guardar</button>
         </form>
     </div>
