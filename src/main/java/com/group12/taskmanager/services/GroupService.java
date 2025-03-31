@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -16,10 +15,6 @@ public class GroupService {
     @Autowired
     private GroupRepository groupRepository;
 
-    public List<Group> getAllGroups() {
-        return groupRepository.findAll();
-    }
-
     public void addGroup(Group group) {
         groupRepository.save(group);
     }
@@ -27,7 +22,6 @@ public class GroupService {
     public Group findGroupById(int groupId) {
         return groupRepository.findByIdWithUsers(groupId);
     }
-
     public Group createGroup(String name, User owner) {
         Group newGroup = new Group(name, owner);
         newGroup.getUsers().add(owner);

@@ -198,6 +198,7 @@ public class GroupController {
     public String updateUser(@RequestParam String name, @RequestParam String email, @RequestParam String password, HttpSession session) {
         User currentUser = (User) session.getAttribute("user");
         if (currentUser != null) {
+            Group userGroup = userService.findPersonalGroup(currentUser.getId());
             currentUser.setName(name);
             currentUser.setEmail(email);
             if (!password.isBlank()) {
@@ -205,7 +206,11 @@ public class GroupController {
             }
 
             userService.updateUser(currentUser);
-            session.setAttribute("user", currentUser);
+            groupService.updateGroupName(userGroup.getId(), "USER_"+name);
+
+            // Recargar desde la base de datos para reflejar los cambios
+            User updatedUser = userService.findUserById(currentUser.getId());
+            session.setAttribute("user", updatedUser);
         }
         return "redirect:/";
     }

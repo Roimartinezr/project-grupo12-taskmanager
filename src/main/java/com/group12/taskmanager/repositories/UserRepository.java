@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface UserRepository extends JpaRepository<User, Integer> {
-    User findByEmail(String email);
     User findByName(String name);
     @Query("SELECT u FROM User u LEFT JOIN FETCH u.groups WHERE u.email = :email")
     User findByEmailWithGroups(@Param("email") String email);

@@ -2,7 +2,6 @@ package com.group12.taskmanager.services;
 
 import com.group12.taskmanager.models.Group;
 import com.group12.taskmanager.models.User;
-import com.group12.taskmanager.repositories.GroupRepository;
 import com.group12.taskmanager.repositories.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -20,10 +18,6 @@ public class UserService {
 
     @Autowired
     private GroupService groupService;
-
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
-    }
 
     @Transactional
     public void addUser(User user) {
@@ -39,6 +33,18 @@ public class UserService {
 
     public User findUserByUsername(String userName) {
         return userRepository.findByName(userName);
+    }
+
+    public Group findPersonalGroup(int userId) {
+        User user = findUserById(userId);
+        if (user == null) return null;
+
+        String personalGroupName = "USER_" + user.getName();
+
+        return user.getGroups().stream()
+                .filter(group -> group.getName().equals(personalGroupName))
+                .findFirst()
+                .orElse(null);
     }
 
     // Actualizar este método para que use la consulta personalizada que recupera los grupos
