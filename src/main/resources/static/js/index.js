@@ -98,7 +98,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const formData = new URLSearchParams();
         formData.append("name", document.getElementById("name").value);
-        formData.append("userId", document.querySelector("input[name='userId']").value);
+        const groupSelect = formNewProject.querySelector("select[name='groupId']");
+        if (groupSelect) {
+            formData.append("groupId", groupSelect.value);
+        } else {
+            formData.append("groupId", formNewProject.querySelector("input[name='groupId']").value);
+        }
+
         let url = "/save_project";
         let method = "POST";
 

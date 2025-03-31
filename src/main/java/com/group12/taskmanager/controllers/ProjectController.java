@@ -38,20 +38,25 @@ public class ProjectController {
         for (Group group : currentUser.getGroups()) {
             projects.addAll(projectService.getProjectsByGroup(group));
         }
+
+        // Grupos donde el usuario es propietario
+        List<Group> ownedGroups = currentUser.getGroups().stream()
+                .filter(g -> g.getOwner().getId().equals(currentUser.getId()))
+                .toList();
+        model.addAttribute("ownedGroups", ownedGroups);
+        model.addAttribute("multipleGroups", ownedGroups.size() > 1);
+        model.addAttribute("singleGroup", ownedGroups.size() == 1 ? ownedGroups.get(0) : null);
         model.addAttribute("projects", projects);
+
         return "index";
     }
 
     @PostMapping("/save_project")
-    public String saveProject(@RequestParam String name, @RequestParam int userId) {
-        User user = userService.findUserById(userId);
-        if (user == null) return "redirect:/";
+    public String saveProject(@RequestParam String name, @RequestParam int groupId) {
+        Group group = groupService.findGroupById(groupId);
+        if (group == null) return "redirect:/";
 
-        Group personalGroup = user.getGroups().stream()
-                .filter(g -> g.getName().equals("USER_" + user.getName()))
-                .findFirst().orElse(user.getGroups().getFirst());
-
-        projectService.createProject(name, personalGroup);
+        projectService.createProject(name, group);
         return "redirect:/projects";
     }
 
