@@ -35,14 +35,23 @@ public class ProjectController {
 
         model.addAttribute("user", currentUser);
         List<Project> projects = new ArrayList<>();
-        for (Group group : currentUser.getGroups()) {
-            projects.addAll(projectService.getProjectsByGroup(group));
+        List<Group> ownedGroups = new ArrayList<>();
+
+        if (currentUser.getId().equals(1)) {
+            projects = projectService.getAllProjects();
+            ownedGroups = currentUser.getGroups().stream()
+                    .filter(g -> g.getOwner().getId().equals(g.getOwner().getId()))
+                    .toList();
+        } else {
+            for (Group group : currentUser.getGroups()) {
+                projects.addAll(projectService.getProjectsByGroup(group));
+            }
+            // Grupos donde el usuario es propietario
+            ownedGroups = currentUser.getGroups().stream()
+                    .filter(g -> g.getOwner().getId().equals(currentUser.getId()))
+                    .toList();
         }
 
-        // Grupos donde el usuario es propietario
-        List<Group> ownedGroups = currentUser.getGroups().stream()
-                .filter(g -> g.getOwner().getId().equals(currentUser.getId()))
-                .toList();
         model.addAttribute("ownedGroups", ownedGroups);
         model.addAttribute("multipleGroups", ownedGroups.size() > 1);
         model.addAttribute("singleGroup", ownedGroups.size() == 1 ? ownedGroups.get(0) : null);

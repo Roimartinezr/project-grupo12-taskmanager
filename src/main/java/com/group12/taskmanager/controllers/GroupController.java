@@ -31,12 +31,23 @@ public class GroupController {
     public String getUserGroups(Model model, HttpSession session) {
         User currentUser = (User) session.getAttribute("user");
         if (currentUser == null) return "redirect:/login";
+        List<Group> groups;
 
-        List<Group> groups = currentUser.getGroups();
-        for (Group group : groups) {
-            group.setIsOwner(group.getOwner().getId().equals(currentUser.getId()));
-            group.setIsPersonal(group.getName().equals("USER_" + currentUser.getName()));
+        if (currentUser.getId().equals(1)) {
+            groups = groupService.getAllGroups();
+            for (Group group : groups) {
+                group.setIsOwner(true);
+                group.setIsPersonal(group.getName().equals("USER_admin"));
+            }
+        } else {
+            groups = currentUser.getGroups();
+            for (Group group : groups) {
+                // si el usuario es el dueño
+                group.setIsOwner(group.getOwner().getId().equals(currentUser.getId()));
+                group.setIsPersonal(group.getName().equals("USER_" + currentUser.getName()));
+            }
         }
+
 
         model.addAttribute("groups", groups);
         model.addAttribute("user", currentUser);
@@ -193,12 +204,15 @@ public class GroupController {
 
     @PostMapping("/delete_user/{userId}")
     public String deleteUser(@PathVariable int userId, HttpSession session) {
-        User currentUser = (User) session.getAttribute("user");
-        if (currentUser == null) return "redirect:/error";
+        if (userId != 1) {
+            User currentUser = (User) session.getAttribute("user");
+            if (currentUser == null) return "redirect:/error";
 
-        boolean deleted = userService.deleteUser(userId, currentUser);
-        if (deleted && currentUser.getId().equals(userId)) session.invalidate();
-        return deleted ? "redirect:/" : "redirect:/error";
+            boolean deleted = userService.deleteUser(userId, currentUser);
+            if (deleted && currentUser.getId().equals(userId)) session.invalidate();
+            return deleted ? "redirect:/" : "redirect:/error";
+        }
+        return "redirect:/";
     }
 
     @PostMapping("/update_user")
