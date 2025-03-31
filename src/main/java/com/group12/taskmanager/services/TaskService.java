@@ -30,12 +30,12 @@ public class TaskService {
         return false;
     }
 
-    public Task updateTask(int id, String title, String description, String imagePath) {
+    public Task updateTask(int id, String title, String description, byte[] imageBytes) {
         Task task = findTaskById(id);
         if (task != null) {
             if (title != null) task.setTitle(title);
             if (description != null) task.setDescription(description);
-            if (imagePath != null) task.setImagePath(imagePath); // solo en memoria
+            if (imageBytes != null) task.setImage(imageBytes); // ahora se actualiza el BLOB
             return taskRepository.save(task);
         }
         return null;

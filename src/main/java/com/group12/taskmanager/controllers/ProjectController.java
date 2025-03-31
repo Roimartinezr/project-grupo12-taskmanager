@@ -71,6 +71,13 @@ public class ProjectController {
         Project project = projectService.findProjectById(id);
         List<Task> tasks = taskService.getProjectTasks(project);
 
+        for (Task task : tasks) {
+            if (task.getImage() != null) {
+                String base64 = Base64.getEncoder().encodeToString(task.getImage());
+                task.setImageBase64(base64); // crea un nuevo campo transient
+            }
+        }
+
         if (project != null) {
             model.addAttribute("idproject", project.getId());
             model.addAttribute("tasks", tasks);
@@ -88,24 +95,26 @@ public class ProjectController {
                            @RequestParam String description,
                            @RequestParam(required = false) MultipartFile image) {
 
-        String imagePath = "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/200px-No_image_available.svg.png";
+        if (image != null && image.getSize() > 5 * 1024 * 1024) { // 5 MB
+            throw new IllegalArgumentException("Imagen demasiado grande (max 5MB)");
+        }
 
+        byte[] imageBytes = null;
         if (image != null && !image.isEmpty()) {
             try {
-                String uploadDir = System.getProperty("user.dir") + "/src/main/resources/static/uploads/";
-                File uploadFolder = new File(uploadDir);
-                if (!uploadFolder.exists()) uploadFolder.mkdirs();
-                String fileName = UUID.randomUUID() + "_" + image.getOriginalFilename();
-                File destinationFile = new File(uploadDir + fileName);
-                image.transferTo(destinationFile);
-                imagePath = "/uploads/" + fileName;
+                imageBytes = image.getBytes(); // 🔹 se lee como array de bytes
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
 
         Project project = projectService.findProjectById(id);
-        Task task = new Task(title, description, project, imagePath);
+        Task task = new Task();
+        task.setTitle(title);
+        task.setDescription(description);
+        task.setProject(project);
+        task.setImage(imageBytes);
+
         taskService.addTask(task);
         return "redirect:/project/" + id;
     }
@@ -125,29 +134,26 @@ public class ProjectController {
                                       @RequestParam int taskId,
                                       @RequestParam String title,
                                       @RequestParam String description,
-                                      @RequestParam(required = false) MultipartFile image,
-                                      @RequestParam(required = false) String imagePath) {
+                                      @RequestParam(required = false) MultipartFile image) {
 
         Task task = taskService.findTaskById(taskId);
         if (task == null || task.getProject().getId() != id)
             return ResponseEntity.status(404).body(Collections.singletonMap("error", "Tarea no encontrada"));
 
-        String newImagePath = imagePath;
+        if (image != null && image.getSize() > 5 * 1024 * 1024) { // 5 MB
+            throw new IllegalArgumentException("Imagen demasiado grande (max 5MB)");
+        }
+
+        byte[] imageBytes = null;
         if (image != null && !image.isEmpty()) {
             try {
-                String uploadDir = System.getProperty("user.dir") + "/src/main/resources/static/uploads/";
-                File uploadFolder = new File(uploadDir);
-                if (!uploadFolder.exists()) uploadFolder.mkdirs();
-                String fileName = UUID.randomUUID() + "_" + image.getOriginalFilename();
-                File destinationFile = new File(uploadDir + fileName);
-                image.transferTo(destinationFile);
-                newImagePath = "/uploads/" + fileName;
+                imageBytes = image.getBytes();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
 
-        taskService.updateTask(taskId, title, description, newImagePath);
+        taskService.updateTask(taskId, title, description, imageBytes);
         return ResponseEntity.ok(Collections.singletonMap("message", "Tarea actualizada correctamente"));
     }
 

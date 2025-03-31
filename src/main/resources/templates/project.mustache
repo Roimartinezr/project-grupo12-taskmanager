@@ -13,7 +13,11 @@
         {{#tasks}}
             <li class="task-item" data-taskid="{{id}}">
                 <div class="task-content">
-                    <b>{{title}}</b>: {{description}}
+                    <b>{{title}}</b>
+                    <p>{{description}}</p>
+                    {{#imageBase64}}
+                        <img src="data:image/jpeg;base64,{{imageBase64}}" style="max-width: 200px;">
+                    {{/imageBase64}}
                     <button class="btnMoreOptions" data-taskid="{{id}}">
                         <img src="/img/menu.png" alt="Más opciones" style="width:16px; height:16px;">
                     </button>
