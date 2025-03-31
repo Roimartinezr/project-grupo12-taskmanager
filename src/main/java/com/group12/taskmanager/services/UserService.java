@@ -55,6 +55,10 @@ public class UserService {
         return userRepository.findByNameStartingWithExcludingGroup(q.trim(), group.getUsers());
     }
 
+    @Transactional
+    public void updateUser(User user) {
+        userRepository.save(user); // Hibernate detecta si es nuevo o existente
+    }
 
     public boolean deleteUser(int userId, User currentUser) {
         if (currentUser.getId() != userId) {

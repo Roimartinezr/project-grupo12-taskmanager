@@ -200,8 +200,12 @@ public class GroupController {
         if (currentUser != null) {
             currentUser.setName(name);
             currentUser.setEmail(email);
-            currentUser.setPassword(password);
-            userService.addUser(currentUser);
+            if (!password.isBlank()) {
+                currentUser.setPassword(password); // En producción, encriptar aquí
+            }
+
+            userService.updateUser(currentUser);
+            session.setAttribute("user", currentUser);
         }
         return "redirect:/";
     }
