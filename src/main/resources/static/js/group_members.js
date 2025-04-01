@@ -72,6 +72,9 @@ document.addEventListener("DOMContentLoaded", function () {
                     if (data.success) {
                         console.log("Miembro eliminado correctamente");
                         document.querySelector(`[data-userid='${userId}']`).remove();
+                        if (data.message === "own") { // si es admin que se está eliminando a si mismo de un grupo
+                            window.location.href = `/manage_members/${groupId}`;
+                        }
                     } else {
                         alert(data.message);
                     }

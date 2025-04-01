@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -136,18 +137,27 @@ public class GroupController {
         User user = userService.findUserById(userId);
 
         if (group == null || user == null || !group.getOwner().getId().equals(currentUser.getId())) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body(Collections.singletonMap("message", "No autorizado o grupo/usuario no encontrado"));
+            if (!currentUser.getId().equals(1))
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body(Collections.singletonMap("message", "No autorizado o grupo/usuario no encontrado"));
         }
 
         if (currentUser.getId() == userId) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body(Collections.singletonMap("message", "No puedes eliminarte si eres el propietario"));
+            // validación admin
+            if (!currentUser.getId().equals(1) || group.getOwner().getId().equals(1)) // si el user es admin y NO es el propietario
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body(Collections.singletonMap("message", "No puedes eliminarte si eres el propietario"));
         }
 
         group.getUsers().remove(user);
-        groupService.saveGroup(group); // solo guarda el propietario
+        groupService.saveGroup(group); // solo guarda el propietario (group)
 
+        if (currentUser.getId().equals(userId)) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("message", "own");
+            return ResponseEntity.ok(response);
+        }
         return ResponseEntity.ok(Collections.singletonMap("success", true));
     }
 
@@ -167,7 +177,10 @@ public class GroupController {
             Group group = groupService.findGroupById(groupId);
 
             if (currentUser == null || group == null || !group.getOwner().getId().equals(currentUser.getId())) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Collections.singletonMap("message", "No autorizado"));
+                if (!currentUser.getId().equals(1)) {
+                    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Collections.singletonMap("message", "No autorizado"));
+
+                }
             }
 
             List<Integer> userIds = ((List<?>) payload.get("userIds")).stream()
@@ -190,9 +203,6 @@ public class GroupController {
         }
     }
 
-
-
-    
     @GetMapping("/edit_user")
     public String showEditUserPage(HttpSession session, Model model) {
         User currentUser = (User) session.getAttribute("user");
@@ -255,7 +265,9 @@ public class GroupController {
 
         // Verificamos que el usuario actual sea el propietario
         if (!group.getOwner().getId().equals(currentUser.getId())) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("No tienes permisos para cambiar el propietario");
+            if (!currentUser.getId().equals(1)) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("No tienes permisos para cambiar el propietario");
+            }
         }
 
         User newOwner = userService.findUserById(newOwnerId);
