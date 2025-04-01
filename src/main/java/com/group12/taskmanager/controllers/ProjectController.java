@@ -25,7 +25,6 @@ public class ProjectController {
 
     @Autowired private ProjectService projectService;
     @Autowired private TaskService taskService;
-    @Autowired private UserService userService;
     @Autowired private GroupService groupService;
 
     @GetMapping("/projects")
@@ -39,9 +38,7 @@ public class ProjectController {
 
         if (currentUser.getId().equals(1)) {
             projects = projectService.getAllProjects();
-            ownedGroups = currentUser.getGroups().stream()
-                    .filter(g -> g.getOwner().getId().equals(g.getOwner().getId()))
-                    .toList();
+            ownedGroups = groupService.getAllGroups();
         } else {
             for (Group group : currentUser.getGroups()) {
                 projects.addAll(projectService.getProjectsByGroup(group));
