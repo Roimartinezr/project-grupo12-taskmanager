@@ -72,13 +72,4 @@ public class User {
     public List<Group> getGroups() {
         return groups;
     }
-    public void setGroups(List<Group> groups) {
-        this.groups = groups;
-    }
-
-    public void updateGroups(Group group) {
-        if (!groups.contains(group)) {
-            this.groups.add(group);
-        }
-    }
 }

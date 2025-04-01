@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function() {
     const modalTask = document.getElementById("modalTask");
-    const btnNewTask = document.getElementById("btnNewTask");
+    const btnNewTask = document.getElementById("btnNewItem");
     const formNewTask = document.getElementById("formNewTask");
     const projectID = document.getElementById("project-info").dataset.projectid;
     let currentTaskId = null; // Para guardar el id de la tarea seleccionada

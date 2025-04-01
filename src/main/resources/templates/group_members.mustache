@@ -1,49 +1,54 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/css/members.css">
-    <title>Usuarios</title>
-</head>
-<body data-groupid="{{currentGroup.id}}" data-userid="{{currentUser.id}}">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="/css/global.css">
+        <link rel="stylesheet" href="/css/members.css">
+        <title>Usuarios</title>
+    </head>
+    <body data-groupid="{{currentGroup.id}}" data-userid="{{currentUser.id}}">
 
-<a href="/user_groups"><button id="btnBack"><img src="/img/arrow_back.png" alt="back" style="width:32px; height:24px;"></button></a>
-<h1>Miembros de {{currentGroup.name}}</h1>
+        <div>
+            <a href="/user_groups"><button id="btnBack"></button></a>
+        </div>
 
-<ul>
-    {{#users}}
-        <li class="user-item" data-userid="{{id}}">
-            <div class="user-content">
-                <b>{{name}}</b>
-                <button class="btnMoreOptions" data-userid="{{id}}">
-                    <img src="/img/menu.png" alt="Más opciones" style="width:16px; height:16px;">
-                </button>
+
+        <h1>Miembros de {{currentGroup.name}}</h1>
+
+        <ul>
+            {{#users}}
+                <li class="user-item" data-userid="{{id}}">
+                    <div class="user-content">
+                        <b>{{name}}</b>
+                        <button class="btnMoreOptions" data-userid="{{id}}">
+                            <img src="/img/menu.png" alt="Más opciones">
+                        </button>
+                    </div>
+
+                    <div class="modalOptions modal hidden" id="modalOptions-{{id}}">
+                        <div class="modal-content">
+                            <h2>{{name}}</h2>
+                            <button class="btnDeleteMember" data-userid="{{id}}">Eliminar miembro</button>
+                        </div>
+                    </div>
+                </li>
+            {{/users}}
+        </ul>
+
+        <!-- Botón para añadir nuevo usuario -->
+        <button id="btnNewItem">Añadir nuevo miembro</button>
+
+        <!-- Modal para buscar y agregar usuarios -->
+        <div id="modalSearchUsers" class="modal hidden">
+            <div class="modal-content">
+                <h2>Buscar usuarios</h2>
+                <input type="text" id="searchUserInput" placeholder="Buscar usuario..." autocomplete="off">
+                <ul id="userSearchResults"></ul>
+                <button id="btnAddSelectedUsers">Añadir seleccionados</button>
             </div>
+        </div>
 
-            <div class="modalOptions modal hidden" id="modalOptions-{{id}}">
-                <div class="modal-content">
-                    <h2>{{name}}</h2>
-                    <button class="btnDeleteMember" data-userid="{{id}}">Eliminar miembro</button>
-                </div>
-            </div>
-        </li>
-    {{/users}}
-</ul>
-
-<!-- Botón para añadir nuevo usuario -->
-<button id="btnNewMember">Añadir nuevo miembro</button>
-
-<!-- Modal para buscar y agregar usuarios -->
-<div id="modalSearchUsers" class="modal hidden">
-    <div class="modal-content">
-        <h2>Buscar usuarios</h2>
-        <input type="text" id="searchUserInput" placeholder="Buscar usuario..." autocomplete="off">
-        <ul id="userSearchResults"></ul>
-        <button id="btnAddSelectedUsers">Añadir seleccionados</button>
-    </div>
-</div>
-
-<script src="/js/group_members.js" defer></script>
-</body>
+        <script src="/js/group_members.js" defer></script>
+    </body>
 </html>

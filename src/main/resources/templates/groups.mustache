@@ -3,12 +3,17 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="/css/global.css">
         <link rel="stylesheet" href="/css/groups.css">
         <title>Grupos</title>
     </head>
     <body>
 
-        <a href="/projects"><button id="btnBack"><img src="/img/arrow_back.png" alt="back" style="width:32px; height:24px;"></button></a>
+        <div>
+            <a href="/projects"><button id="btnBack"></button></a>
+        </div>
+
+
         <h1>Mis Grupos</h1>
 
         <ul>
@@ -17,7 +22,7 @@
                     <div class="group-content">
                         <b>{{name}}</b>
                         <button class="btnMoreOptions" data-groupid="{{id}}">
-                            <img src="/img/menu.png" alt="Más opciones" style="width:32px; height:24px;">
+                            <img src="/img/menu.png" alt="Más opciones">
                         </button>
                     </div>
 
@@ -43,7 +48,7 @@
         </ul>
 
         <!-- Botón para crear nuevo grupo -->
-        <button id="btnNewGroup">Nuevo Grupo</button>
+        <button id="btnNewItem">Nuevo Grupo</button>
 
         <!-- Modal para crear nuevo grupo -->
         <div id="modalGroup" class="modal hidden">

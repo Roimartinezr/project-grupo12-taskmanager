@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const btnNewMember = document.getElementById("btnNewMember");
+    const btnNewMember = document.getElementById("btnNewItem");
     const modalSearchUsers = document.getElementById("modalSearchUsers");
     const searchUserInput = document.getElementById("searchUserInput");
     const userSearchResults = document.getElementById("userSearchResults");

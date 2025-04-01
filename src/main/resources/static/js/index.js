@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
     const modalProject = document.getElementById("modalProject");
-    const btnNewProject = document.getElementById("btnNewProject");
+    const btnNewProject = document.getElementById("btnNewItem");
     const formNewProject = document.getElementById("formNewProject");
     const openUserOptions = document.getElementById("openUserOptions");
     const userOptionsModal = document.getElementById("user-options");

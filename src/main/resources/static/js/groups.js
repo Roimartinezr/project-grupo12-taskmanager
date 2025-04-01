@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const modalGroup = document.getElementById("modalGroup");
     const modalNewOwner = document.getElementById("modalChangeOwner")
     const modalTitle = modalGroup.querySelector("h2");
-    const btnNewGroup = document.getElementById("btnNewGroup");
+    const btnNewGroup = document.getElementById("btnNewItem");
     const formNewGroup = document.getElementById("formNewGroup");
     const inputGroupName = formNewGroup.querySelector("input[name='name']");
     const groupUsersResult =document.getElementById("groupUsersResult");
