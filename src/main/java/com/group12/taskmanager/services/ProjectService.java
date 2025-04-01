@@ -18,6 +18,10 @@ public class ProjectService {
     @Autowired
     private TaskService taskService;
 
+    public List<Project> getAllProjects() {
+        return projectRepository.findAll();
+    }
+
     public void createProject(String name, Group group) {
         Project project = new Project(name, group);
         projectRepository.save(project);

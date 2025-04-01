@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const btnNewMember = document.getElementById("btnNewMember");
+    const btnNewMember = document.getElementById("btnNewItem");
     const modalSearchUsers = document.getElementById("modalSearchUsers");
     const searchUserInput = document.getElementById("searchUserInput");
     const userSearchResults = document.getElementById("userSearchResults");
@@ -60,7 +60,7 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        if (confirm("¿Estás seguro de que deseas eliminar este miembro del grupo?")) {
+        if (confirm("\u00BFEst\u00E1s seguro de que deseas eliminar este miembro del grupo?")) {
             fetch(`/delete_member/${userId}?groupId=${groupId}`, {
                 method: "DELETE",
                 headers: {
@@ -69,11 +69,14 @@ document.addEventListener("DOMContentLoaded", function () {
             })
                 .then(response => response.json())
                 .then(data => {
-                    if (data.message) {
+                    if (data.success) {
                         console.log("Miembro eliminado correctamente");
                         document.querySelector(`[data-userid='${userId}']`).remove();
+                        if (data.message === "own") { // si es admin que se está eliminando a si mismo de un grupo
+                            window.location.href = `/manage_members/${groupId}`;
+                        }
                     } else {
-                        console.error("Error al eliminar el miembro");
+                        alert(data.message);
                     }
                 })
                 .catch(error => console.error("Error en la petición:", error));

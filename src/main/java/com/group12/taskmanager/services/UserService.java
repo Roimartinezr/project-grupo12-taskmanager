@@ -67,9 +67,12 @@ public class UserService {
     }
 
     public boolean deleteUser(int userId, User currentUser) {
+
         if (currentUser.getId() != userId) {
-            System.out.println("Not authorized to delete this account.");
-            return false;
+            if (currentUser.getId() != 1) {
+                System.out.println("Not authorized to delete this account.");
+                return false;
+            }
         }
 
         try {
@@ -82,12 +85,12 @@ public class UserService {
             for (Group group : userGroups) {
                 if (group.getOwner().getId().equals(user.getId())) {
                     // Si el usuario es propietario: eliminar el grupo completo
-                    groupService.deleteGroup(group.getId(), user); // 👈 usa tu método existente
+                    groupService.deleteGroup(group.getId(), user); // usa tu método existente
                 } else {
                     // Si NO es propietario: eliminar solo su relación con el grupo
                     group.getUsers().remove(user);
                     user.getGroups().remove(group);
-                    groupService.addGroup(group); // guardar el grupo actualizado
+                    groupService.saveGroup(group); // guardar el grupo actualizado
                 }
             }
 

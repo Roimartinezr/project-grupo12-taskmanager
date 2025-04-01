@@ -2,7 +2,7 @@ body {
     background-image: url('../img/background_resized.jpg');
 }
 
-.group-item {
+.user-item {
     background: rgba(77, 116, 255, 0.9);
     padding: 15px;
     border-radius: 10px;
@@ -13,7 +13,22 @@ body {
     align-items: center;
 }
 
-.group-content {
+.selectable-user {
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    border-bottom: 1px solid #ccc;
+}
+
+.selectable-user:hover {
+    background-color: #f0f0f0;
+}
+
+.user-checkbox {
+    transform: scale(1.2);
+}
+
+.user-content {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -21,7 +36,7 @@ body {
     gap: 10px;
 }
 
-.group-content b {
+.user-content b {
     font-size: 1.5em;
     font-weight: bold;
     font-family: 'Poppins', sans-serif;
@@ -31,11 +46,6 @@ body {
     border-radius: 8px;
     display: inline-block;
     flex-grow: 1;
-}
-
-form {
-    display: flex;
-    flex-direction: column;
 }
 
 input {

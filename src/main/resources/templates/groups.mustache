@@ -3,10 +3,17 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="/css/global.css">
         <link rel="stylesheet" href="/css/groups.css">
         <title>Grupos</title>
     </head>
     <body>
+
+        <div>
+            <a href="/projects"><button id="btnBack"></button></a>
+        </div>
+
+
         <h1>Mis Grupos</h1>
 
         <ul>
@@ -15,7 +22,7 @@
                     <div class="group-content">
                         <b>{{name}}</b>
                         <button class="btnMoreOptions" data-groupid="{{id}}">
-                            <img src="/img/menu.png" alt="Más opciones" style="width:16px; height:16px;">
+                            <img src="/img/menu.png" alt="Más opciones">
                         </button>
                     </div>
 
@@ -25,9 +32,10 @@
                             <h2>{{name}}</h2>
                             {{^isPersonal}}
                                 {{#isOwner}}
-                                    <button class="btnDeleteGroup" data-groupid="{{id}}">Eliminar Grupo</button>
-                                    <button class="btnManageMembers" data-groupid="{{id}}">Gestionar Miembros</button>
                                     <button class="btnEditGroup" data-groupid="{{id}}">Editar Grupo</button>
+                                    <button class="btnManageMembers" data-groupid="{{id}}">Gestionar Miembros</button>
+                                    <button class="btnChangeOwner" data-groupid="{{id}}">Cambiar Propietario</button>
+                                    <button class="btnDeleteGroup" data-groupid="{{id}}">Eliminar Grupo</button>
                                 {{/isOwner}}
                                 {{^isOwner}}
                                     <button class="btnLeaveGroup" data-groupid="{{id}}">Salir del Grupo</button>
@@ -40,17 +48,27 @@
         </ul>
 
         <!-- Botón para crear nuevo grupo -->
-        <button id="btnNewGroup">Nuevo Grupo</button>
+        <button id="btnNewItem">Nuevo Grupo</button>
 
         <!-- Modal para crear nuevo grupo -->
         <div id="modalGroup" class="modal hidden">
             <div class="modal-content">
                 <h2>Nuevo Grupo</h2>
                 <form id="formNewGroup" action="/save_group" method="POST">
-                    <input type="text" id="name" name="name" placeholder="Nombre del grupo" required>
+                    <input type="text" id="name" name="name" placeholder="Nombre del grupo" autocomplete="off" required>
                     <input type="hidden" name="userId" value="{{user.id}}">
                     <button type="submit">Guardar</button>
                 </form>
+            </div>
+        </div>
+
+        <!-- Modal para buscar y agregar usuarios -->
+        <div id="modalChangeOwner" class="modal hidden">
+            <div class="modal-content">
+                <h2>Cambiar Propietario</h2>
+                <!-- Lista de usuarios en radiobuttons -->
+                <ul id="groupUsersResult"></ul>
+                <button id="btnAddSelectedUser">Añadir seleccionado</button>
             </div>
         </div>
 

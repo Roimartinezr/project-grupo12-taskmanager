@@ -1,90 +1,93 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/css/index.css">
-    <title>Home</title>
-</head>
-<body>
-<h1>Proyectos</h1>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="/css/global.css">
+        <link rel="stylesheet" href="/css/index.css">
+        <title>Home</title>
+    </head>
+    <body>
+        <h1>Proyectos</h1>
 
-<ul>
-    {{#projects}}
-        <li class="project-item" data-projectid="{{id}}">
-            <div class="project-content">
-                <a href="/project/{{id}}"><b>{{name}}</b></a>
-                <button class="btnMoreOptions" data-projectid="{{id}}">
-                    <img src="/img/menu.png" alt="Más opciones" style="width:16px; height:16px;">
+        <ul>
+            {{#projects}}
+                <li class="project-item" data-projectid="{{id}}">
+                    <div class="project-content">
+                        <a href="/project/{{id}}"><b>{{name}}</b></a>
+                        <button class="btnMoreOptions" data-projectid="{{id}}">
+                            <img src="/img/menu.png" alt="Más opciones">
+                        </button>
+                    </div>
+
+                    <!-- Modal de opciones -->
+                    <div class="modalOptions modal hidden" id="modalOptions-{{id}}">
+                        <div class="modal-content">
+                            <h2>{{name}}</h2>
+                            <button class="btnDeleteProject" data-projectid="{{id}}">Eliminar Proyecto</button>
+                            <button class="btnEditProject" data-projectid="{{id}}">Editar Proyecto</button>
+                        </div>
+                    </div>
+                </li>
+            {{/projects}}
+
+        </ul>
+
+        <!-- Botón para agregar nuevo proyecto -->
+        <button id="btnNewItem">Nuevo Proyecto</button>
+
+        <div class="container">
+            <button id="openUserOptions" class="user-options-btn">Mi Cuenta</button>
+        </div>
+
+        <!-- Modal de opciones de usuario -->
+        <div id="user-options" class="modalOptions modal hidden">
+            <div class="modal-content">
+                <h2>{{user.name}}</h2>
+                <button class="btnEditUser">
+                    <a href="/edit_user">Editar datos</a>
                 </button>
+
+                <!-- Botón "Gestionar grupos" ahora está dentro del menú de usuario -->
+                <button class="btnManageGroups">
+                    <a href="/user_groups">Gestionar grupos</a>
+                </button>
+
+                <button class="btnLogout">
+                    <a href="/logout">Cerrar sesión</a>
+                </button>
+
+                <form id="deleteAccountForm" action="/delete_user/{{user.id}}" method="POST">
+                    <button type="submit" id="deleteAccountBtn">Eliminar cuenta</button>
+                </form>
+
             </div>
+        </div>
 
-            <!-- Modal de opciones -->
-            <div class="modalOptions modal hidden" id="modalOptions-{{id}}">
-                <div class="modal-content">
-                    <h2>{{name}}</h2>
-                    <button class="btnDeleteProject" data-projectid="{{id}}">Eliminar Proyecto</button>
-                    <button class="btnEditProject" data-projectid="{{id}}">Editar Proyecto</button>
-                </div>
+        <!-- Modal para crear nuevo proyecto -->
+        <div id="modalProject" class="modal hidden">
+            <div class="modal-content">
+                <h2>Nuevo Proyecto</h2>
+                <form id="formNewProject" action="/save_project" method="POST">
+                    <input type="text" id="name" name="name" placeholder="Nombre del proyecto" autocomplete="off" required>
+                    {{#multipleGroups}}
+                        <select name="groupId" required>
+                            {{#ownedGroups}}
+                                <option value="{{id}}">{{name}}</option>
+                            {{/ownedGroups}}
+                        </select>
+                    {{/multipleGroups}}
+
+                    {{^multipleGroups}}
+                        <input type="hidden" name="groupId" value="{{singleGroup.id}}">
+                    {{/multipleGroups}}
+
+                    <button type="submit">Guardar</button>
+                </form>
             </div>
-        </li>
-    {{/projects}}
+        </div>
 
-</ul>
-
-<!-- Botón para agregar nuevo proyecto -->
-<button id="btnNewProject">Nuevo Proyecto</button>
-
-<div class="container">
-    <button id="openUserOptions" class="user-options-btn">Mi Cuenta</button>
-</div>
-
-<!-- Modal de opciones de usuario -->
-<div id="user-options" class="modalOptions modal hidden">
-    <div class="modal-content">
-        <h2>{{user.name}}</h2>
-        <button class="btnEditUser">
-            <a href="/edit_user">Editar datos</a>
-        </button>
-        <button class="btnLogout">
-            <a href="/logout">Cerrar sesión</a>
-        </button>
-
-        <form id="deleteAccountForm" action="/delete_user/{{user.id}}" method="POST">
-            <button type="submit">Eliminar cuenta</button>
-        </form>
-
-        <!-- Botón "Gestionar grupos" ahora está dentro del menú de usuario -->
-        <button class="btnManageGroups">
-            <a href="/user_groups">Gestionar grupos</a>
-        </button>
-    </div>
-</div>
-
-<!-- Modal para crear nuevo proyecto -->
-<div id="modalProject" class="modal hidden">
-    <div class="modal-content">
-        <h2>Nuevo Proyecto</h2>
-        <form id="formNewProject" action="/save_project" method="POST">
-            <input type="text" id="name" name="name" placeholder="Nombre del proyecto" required>
-            {{#multipleGroups}}
-                <select name="groupId" required>
-                    {{#ownedGroups}}
-                        <option value="{{id}}">{{name}}</option>
-                    {{/ownedGroups}}
-                </select>
-            {{/multipleGroups}}
-
-            {{^multipleGroups}}
-                <input type="hidden" name="groupId" value="{{singleGroup.id}}">
-            {{/multipleGroups}}
-
-            <button type="submit">Guardar</button>
-        </form>
-    </div>
-</div>
-
-<!-- Asegúrate que este script carga correctamente -->
-<script src="/js/index.js" defer></script>
-</body>
+        <!-- Asegúrate que este script carga correctamente -->
+        <script src="/js/index.js" defer></script>
+    </body>
 </html>
