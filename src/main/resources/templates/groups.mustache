@@ -55,9 +55,13 @@
             <div class="modal-content">
                 <h2>Nuevo Grupo</h2>
                 <form id="formNewGroup" action="/save_group" method="POST">
-                    <input type="text" id="name" name="name" placeholder="Nombre del grupo" autocomplete="off" required>
+                    <label>
+                        <input type="text" id="name" name="name" placeholder="Nombre del grupo" autocomplete="off" required>
+                    </label>
                     <input type="hidden" name="userId" value="{{user.id}}">
-                    <button type="submit">Guardar</button>
+                    <label>
+                        <button type="submit">Guardar</button>
+                    </label>
                 </form>
             </div>
         </div>

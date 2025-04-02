@@ -170,15 +170,17 @@ document.addEventListener("DOMContentLoaded", function () {
                 groupUsersResult.innerHTML = "";
                 users.forEach(user => {
                     const li = document.createElement('li');
+                    li.classList.add("selectable-user");
                     const radio = document.createElement("input");
                     radio.type = "radio";
                     radio.value = user.id;
                     radio.id = `user-${user.id}`;
+                    radio.classList.add("user-radio");
+                    radio.name="groupMember";
 
                     const label = document.createElement("label");
                     label.textContent = user.name;
                     label.setAttribute("for", `user-${user.id}`);
-                    label.style.marginLeft = "8px";
 
                     radio.addEventListener("change", function ()    {
                         if (radio.checked) {
@@ -188,8 +190,8 @@ document.addEventListener("DOMContentLoaded", function () {
                         }
                     });
 
-                    li.appendChild(radio);
                     li.appendChild(label);
+                    li.appendChild(radio);
                     groupUsersResult.appendChild(li);
                 });
             })

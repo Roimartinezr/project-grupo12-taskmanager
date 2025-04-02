@@ -40,21 +40,6 @@ body {
     color: #e0e0e0;
 }
 
-form {
-    display: flex;
-    flex-direction: column;
-}
-
-input {
-    width: 90%;
-    padding: 10px;
-    margin: 10px 0;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    text-align: center;
-    font-size: 16px;
-}
-
 .modalOptions .modal-content {
     display: flex;
     flex-direction: column;
@@ -65,12 +50,10 @@ input {
 .modalOptions .modal-content button {
     margin: 0 0;
 }
-
 .modalOptions .modal-content button a {
     padding: 0;
     margin: 0;
 }
-
 .modal-content form {
     width: 100%;
     display: flex;

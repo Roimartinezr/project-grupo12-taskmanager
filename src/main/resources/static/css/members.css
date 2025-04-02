@@ -13,21 +13,6 @@ body {
     align-items: center;
 }
 
-.selectable-user {
-    display: flex;
-    align-items: center;
-    padding: 8px;
-    border-bottom: 1px solid #ccc;
-}
-
-.selectable-user:hover {
-    background-color: #f0f0f0;
-}
-
-.user-checkbox {
-    transform: scale(1.2);
-}
-
 .user-content {
     display: flex;
     align-items: center;
