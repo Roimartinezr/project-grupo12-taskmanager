@@ -120,7 +120,6 @@ document.addEventListener("DOMContentLoaded", function () {
                     const label = document.createElement("label");
                     label.textContent = user.name;
                     label.setAttribute("for", `user-${user.id}`);
-                    label.style.marginLeft = "8px";
 
                     checkbox.addEventListener("change", function () {
                         if (checkbox.checked) {
@@ -130,8 +129,8 @@ document.addEventListener("DOMContentLoaded", function () {
                         }
                     });
 
-                    li.appendChild(checkbox);
                     li.appendChild(label);
+                    li.appendChild(checkbox);
                     userSearchResults.appendChild(li);
                 });
             })

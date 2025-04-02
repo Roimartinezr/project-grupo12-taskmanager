@@ -3,8 +3,18 @@ document.addEventListener("DOMContentLoaded", function() {
     const btnNewTask = document.getElementById("btnNewItem");
     const formNewTask = document.getElementById("formNewTask");
     const projectID = document.getElementById("project-info").dataset.projectid;
-    let currentTaskId = null; // Para guardar el id de la tarea seleccionada
-    let clickInsideModal = false; // Para recoger si el usr hace clic dentro del modal
+    const fileInput = document.getElementById('fileInput');
+    const fileName = document.getElementById('fileName');
+    let currentTaskId = null;
+    let clickInsideModal = false;
+
+    fileInput.addEventListener('change', function() {
+        if (fileInput.files.length > 0) {
+            fileName.textContent = fileInput.files[0].name;
+        } else {
+            fileName.textContent = "Ningún archivo seleccionado";
+        }
+    });
 
     function asignarEventosBotones() {
         // Botones "Más opciones"
@@ -28,6 +38,7 @@ document.addEventListener("DOMContentLoaded", function() {
             modal.removeEventListener("mouseup", handleModalMouseUp);
             modal.addEventListener("mousedown", handleModalMouseDown);
             modal.addEventListener("mouseup", handleModalMouseUp);
+
         });
     }
 
@@ -80,6 +91,7 @@ document.addEventListener("DOMContentLoaded", function() {
             })
             .catch(error => console.error("Error en la petición:", error));
     }
+    
     function actualizarListaTareas() {
         fetch(`/project/${projectID}`) // 🔹 Obtener las tareas actualizadas del backend
             .then(response => response.text())

@@ -64,14 +64,21 @@ button:active {
     padding: 20px;
     border-radius: 10px;
     text-align: center;
-    width: 300px;
+    width: 350px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     position: relative;
+    display: flex;
+    flex-direction: column;
+}
+.modal-content h2 {
+    font-size: 1.5em;
+    margin-bottom: 20px;
+    color: #333;
 }
 .modalOptions .modal-content button {
     display: block;
     width: 100%;
-    margin: 10px 0;
+    margin: 5px 0;
 }
 .modalOptions .modal-content button a {
     color: inherit;
@@ -114,7 +121,7 @@ button:active {
     background-color: rgba(41, 172, 75, 0.66);
     color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
     cursor: pointer;
     transition: all 0.3s ease;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
@@ -161,4 +168,84 @@ button:active {
     padding: 24px 38px;
     border: 2px solid black;
     border-radius: 120px;
+}
+
+label {
+    display: inline-block;
+    padding: 6px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+input, textarea {
+    text-align: center;
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    resize: none;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+textarea {
+    height: 120px; /* Ajustado para mayor altura */
+}
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+}
+form label {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+form label button {
+    margin-top: 5px;
+}
+
+.selectable-user {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px;
+    border-bottom: 1px solid #ccc;
+    position: relative;
+}
+.selectable-user:hover {
+    background-color: #f0f0f0;
+}
+.user-checkbox, .user-radio {
+    transform: scale(1.6);
+    position: absolute;
+    left: 100px;
+}
+.selectable-user label {
+    text-align: left;
+    margin-top: 10px;
+    flex: 1;
+}
+
+select {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+select option {
+    padding: 8px;
+    font-size: 16px;
+}
+
+select:focus {
+    border-color: #5c9ded;
+    outline: none;
+}
+
+select:disabled {
+    background-color: #f0f0f0;
+    color: #ccc;
 }
